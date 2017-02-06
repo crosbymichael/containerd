@@ -6,13 +6,8 @@ import (
 	"net"
 	"net/http"
 	_ "net/http/pprof"
-	"net/url"
 	"os"
 	"os/signal"
-	"path/filepath"
-	"runtime"
-	"strconv"
-	"strings"
 	"syscall"
 
 	gocontext "golang.org/x/net/context"
@@ -21,15 +16,11 @@ import (
 	"github.com/Sirupsen/logrus"
 	"github.com/docker/containerd"
 	api "github.com/docker/containerd/api/execution"
-	"github.com/docker/containerd/events"
 	"github.com/docker/containerd/log"
 	"github.com/docker/containerd/supervisor"
 	"github.com/docker/containerd/utils"
 	metrics "github.com/docker/go-metrics"
 	"github.com/urfave/cli"
-
-	"github.com/nats-io/go-nats"
-	stand "github.com/nats-io/nats-streaming-server/server"
 )
 
 const usage = `
@@ -58,24 +49,19 @@ func main() {
 			Value: "/run/containerd",
 		},
 		cli.StringFlag{
-			Name:  "socket, s",
+			Name:  "socket,s",
 			Usage: "socket path for containerd's GRPC server",
 			Value: "/run/containerd/containerd.sock",
 		},
 		cli.StringFlag{
-			Name:  "debug-socket, d",
+			Name:  "debug-socket,d",
 			Usage: "socket path for containerd's debug server",
 			Value: "/run/containerd/containerd-debug.sock",
 		},
 		cli.StringFlag{
-			Name:  "metrics-address, m",
+			Name:  "metrics-address,m",
 			Usage: "tcp address to serve metrics on",
 			Value: "127.0.0.1:7897",
-		},
-		cli.StringFlag{
-			Name:  "events-address, e",
-			Usage: "nats address to serve events on",
-			Value: nats.DefaultURL,
 		},
 	}
 	app.Before = func(context *cli.Context) error {
@@ -86,37 +72,16 @@ func main() {
 	}
 	app.Action = func(context *cli.Context) error {
 		signals := make(chan os.Signal, 2048)
-		signal.Notify(signals, syscall.SIGTERM, syscall.SIGINT, syscall.SIGUSR1)
+		signal.Notify(signals, syscall.SIGTERM, syscall.SIGINT)
 
 		ctx := log.WithModule(gocontext.Background(), "containerd")
+
 		if address := context.GlobalString("metrics-address"); address != "" {
-			log.G(ctx).WithField("metrics-address", address).Info("listening and serving metrics")
 			go serveMetrics(ctx, address)
 		}
-
-		ea := context.GlobalString("events-address")
-		log.G(ctx).WithField("events-address", ea).Info("starting nats-streaming-server")
-		s, err := startNATSServer(ea)
-		if err != nil {
-			return nil
-		}
-		defer s.Shutdown()
-
-		debugPath := context.GlobalString("debug-socket")
-		if debugPath == "" {
-			return fmt.Errorf("--debug-socket path cannot be empty")
-		}
-		d, err := utils.CreateUnixSocket(debugPath)
-		if err != nil {
+		if err := serveDebug(ctx, context); err != nil {
 			return err
 		}
-
-		//publish profiling and debug socket.
-		log.G(ctx).WithField("socket", debugPath).Info("starting profiler handlers")
-		log.G(ctx).WithFields(logrus.Fields{"expvars": "/debug/vars", "socket": debugPath}).Debug("serving expvars requests")
-		log.G(ctx).WithFields(logrus.Fields{"pprof": "/debug/pprof", "socket": debugPath}).Debug("serving pprof requests")
-		go serveProfiler(ctx, d)
-
 		path := context.GlobalString("socket")
 		if path == "" {
 			return fmt.Errorf("--socket path cannot be empty")
@@ -126,46 +91,18 @@ func main() {
 			return err
 		}
 
-		// Get events publisher
-		nec, err := getNATSPublisher(ea)
-		if err != nil {
-			return err
-		}
-		defer nec.Close()
-
 		execCtx := log.WithModule(ctx, "execution")
-		execCtx = events.WithPoster(execCtx, events.GetNATSPoster(nec))
-		root := filepath.Join(context.GlobalString("root"), "shim")
-		err = os.Mkdir(root, 0700)
-		if err != nil && !os.IsExist(err) {
-			return err
-		}
 		execService, err := supervisor.New(execCtx, context.GlobalString("root"))
 		if err != nil {
 			return err
 		}
 
-		// Intercept the GRPC call in order to populate the correct module path
-		interceptor := func(ctx gocontext.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-			ctx = log.WithModule(ctx, "containerd")
-			switch info.Server.(type) {
-			case api.ExecutionServiceServer:
-				ctx = log.WithModule(ctx, "execution")
-				ctx = events.WithPoster(ctx, events.GetNATSPoster(nec))
-			default:
-				fmt.Printf("Unknown type: %#v\n", info.Server)
-			}
-			return handler(ctx, req)
-		}
 		server := grpc.NewServer(grpc.UnaryInterceptor(interceptor))
 		api.RegisterExecutionServiceServer(server, execService)
-		log.G(ctx).WithField("socket", l.Addr()).Info("start serving GRPC API")
-		go serveGRPC(ctx, server, l)
 
+		go serveGRPC(ctx, server, l)
 		for s := range signals {
 			switch s {
-			case syscall.SIGUSR1:
-				dumpStacks(ctx)
 			default:
 				log.G(ctx).WithField("signal", s).Info("stopping GRPC server")
 				server.Stop()
@@ -180,7 +117,19 @@ func main() {
 	}
 }
 
+func interceptor(ctx gocontext.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+	ctx = log.WithModule(ctx, "containerd")
+	switch info.Server.(type) {
+	case api.ExecutionServiceServer:
+		ctx = log.WithModule(ctx, "execution")
+	default:
+		fmt.Printf("unknown type: %#v\n", info.Server)
+	}
+	return handler(ctx, req)
+}
+
 func serveMetrics(ctx gocontext.Context, address string) {
+	log.G(ctx).WithField("metrics-address", address).Info("listening and serving metrics")
 	m := http.NewServeMux()
 	m.Handle("/metrics", metrics.Handler())
 	if err := http.ListenAndServe(address, m); err != nil {
@@ -189,6 +138,7 @@ func serveMetrics(ctx gocontext.Context, address string) {
 }
 
 func serveGRPC(ctx gocontext.Context, server *grpc.Server, l net.Listener) {
+	log.G(ctx).WithField("socket", l.Addr()).Info("start serving GRPC API")
 	defer l.Close()
 	if err := server.Serve(l); err != nil {
 		log.G(ctx).WithError(err).Fatal("GRPC server failure")
@@ -201,63 +151,26 @@ func serveProfiler(ctx gocontext.Context, l net.Listener) {
 	}
 }
 
-// DumpStacks dumps the runtime stack.
-func dumpStacks(ctx gocontext.Context) {
-	var (
-		buf       []byte
-		stackSize int
-	)
-	bufferLen := 16384
-	for stackSize == len(buf) {
-		buf = make([]byte, bufferLen)
-		stackSize = runtime.Stack(buf, true)
-		bufferLen *= 2
+func serveDebug(ctx gocontext.Context, context *cli.Context) error {
+	debugPath := context.GlobalString("debug-socket")
+	if debugPath == "" {
+		return nil
 	}
-	buf = buf[:stackSize]
-	log.G(ctx).Infof("=== BEGIN goroutine stack dump ===\n%s\n=== END goroutine stack dump ===", buf)
-}
-
-func startNATSServer(eventsAddress string) (e *stand.StanServer, err error) {
-	eventsURL, err := url.Parse(eventsAddress)
+	d, err := utils.CreateUnixSocket(debugPath)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	no := stand.DefaultNatsServerOptions
-	nOpts := &no
-	nOpts.NoSigs = true
-	parts := strings.Split(eventsURL.Host, ":")
-	nOpts.Host = parts[0]
-	if len(parts) == 2 {
-		nOpts.Port, err = strconv.Atoi(parts[1])
-	} else {
-		nOpts.Port = nats.DefaultPort
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			e = nil
-			if _, ok := r.(error); !ok {
-				err = fmt.Errorf("failed to start NATS server: %v", r)
-			} else {
-				err = r.(error)
-			}
-		}
-	}()
-	s := stand.RunServerWithOpts(nil, nOpts)
-
-	return s, nil
-}
-
-func getNATSPublisher(eventsAddress string) (*nats.EncodedConn, error) {
-	nc, err := nats.Connect(eventsAddress)
-	if err != nil {
-		return nil, err
-	}
-	nec, err := nats.NewEncodedConn(nc, nats.JSON_ENCODER)
-	if err != nil {
-		nc.Close()
-		return nil, err
-	}
-
-	return nec, nil
+	//publish profiling and debug socket.
+	log.G(ctx).WithField("socket", debugPath).Info("starting profiler handlers")
+	log.G(ctx).WithFields(logrus.Fields{
+		"expvars": "/debug/vars",
+		"socket":  debugPath,
+	}).Debug("serve expvars")
+	log.G(ctx).WithFields(logrus.Fields{
+		"pprof":  "/debug/pprof",
+		"socket": debugPath,
+	}).Debug("serve pprof")
+	go serveProfiler(ctx, d)
+	return nil
 }
