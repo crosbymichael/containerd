@@ -35,7 +35,6 @@ containerd client
 	}
 	app.Commands = []cli.Command{
 		runCommand,
-		execCommand,
 		eventsCommand,
 		deleteCommand,
 		listCommand,

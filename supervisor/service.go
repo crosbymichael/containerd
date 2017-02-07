@@ -3,6 +3,7 @@ package supervisor
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sync"
 
@@ -24,8 +25,9 @@ func New(ctx context.Context, root string) (*Service, error) {
 		return nil, err
 	}
 	s := &Service{
-		root:  root,
-		shims: clients,
+		root:   root,
+		shims:  clients,
+		events: newCollector(ctx),
 	}
 	for _, c := range clients {
 		if err := s.monitor(c); err != nil {
@@ -38,8 +40,13 @@ func New(ctx context.Context, root string) (*Service, error) {
 type Service struct {
 	mu sync.Mutex
 
-	root  string
+	// root is the root directory for the supervisor service that shim
+	// state information is placed into, such as the shim's socket
+	root string
+	// shims is a map of the shim clients for each container
 	shims map[string]shim.ShimClient
+	// events is the collector for all shim events
+	events *collector
 }
 
 func (s *Service) Create(ctx context.Context, r *api.CreateContainerRequest) (*api.CreateContainerResponse, error) {
@@ -48,12 +55,17 @@ func (s *Service) Create(ctx context.Context, r *api.CreateContainerRequest) (*a
 		s.mu.Unlock()
 		return nil, fmt.Errorf("container already exists %q", r.ID)
 	}
-	client, err := newShimClient(filepath.Join(s.root, r.ID))
+	path := filepath.Join(s.root, r.ID)
+	if err := os.Mkdir(path, 0755); err != nil {
+		return nil, err
+	}
+	client, err := newShimClient(path)
 	if err != nil {
 		s.mu.Unlock()
 		return nil, err
 	}
 	s.shims[r.ID] = client
+
 	s.mu.Unlock()
 	if err := s.monitor(client); err != nil {
 		return nil, err
@@ -157,31 +169,18 @@ func (s *Service) Resume(ctx context.Context, r *api.ResumeContainerRequest) (*g
 	return client.Resume(ctx, &shim.ResumeRequest{})
 }
 
-func (s *Service) StartProcess(ctx context.Context, r *api.StartProcessRequest) (*api.StartProcessResponse, error) {
-	panic("not implemented")
-}
-
-// containerd managed execs + system pids forked in container
-func (s *Service) GetProcess(ctx context.Context, r *api.GetProcessRequest) (*api.GetProcessResponse, error) {
-	panic("not implemented")
-}
-
-func (s *Service) SignalProcess(ctx context.Context, r *api.SignalProcessRequest) (*google_protobuf.Empty, error) {
-	panic("not implemented")
-}
-
-func (s *Service) DeleteProcess(ctx context.Context, r *api.DeleteProcessRequest) (*google_protobuf.Empty, error) {
-	panic("not implemented")
-}
-
-func (s *Service) ListProcesses(ctx context.Context, r *api.ListProcessesRequest) (*api.ListProcessesResponse, error) {
-	panic("not implemented")
+func (s *Service) Events(r *api.EventsRequest, stream api.ExecutionService_EventsServer) error {
+	return s.events.Publish(stream)
 }
 
 // monitor monitors the shim's event rpc and forwards container and process
 // events to callers
 func (s *Service) monitor(client shim.ShimClient) error {
-	return nil
+	events, err := client.Events(s.events.context, s.events.Request())
+	if err != nil {
+		return err
+	}
+	return s.events.Collect(events)
 }
 
 func (s *Service) getShim(id string) (shim.ShimClient, error) {

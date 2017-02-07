@@ -14,18 +14,12 @@ service ExecutionService {
 	rpc Delete(DeleteContainerRequest) returns (google.protobuf.Empty);
 	rpc Get(GetContainerRequest) returns (GetContainerResponse);
 	rpc List(ListContainersRequest) returns (ListContainersResponse);
-
-	rpc StartProcess(StartProcessRequest) returns (StartProcessResponse);
-	rpc GetProcess(GetProcessRequest) returns (GetProcessResponse);
-	rpc SignalProcess(SignalProcessRequest) returns (google.protobuf.Empty);
-	rpc DeleteProcess(DeleteProcessRequest) returns (google.protobuf.Empty);
-	rpc ListProcesses(ListProcessesRequest) returns (ListProcessesResponse);
+	rpc Events(EventsRequest) returns (stream Event);
 }
 
 message StartContainerRequest {
 	string id = 1 [(gogoproto.customname) = "ID"];
 }
-
 
 message CreateContainerRequest {
 	string id = 1 [(gogoproto.customname) = "ID"];
@@ -52,19 +46,6 @@ message ListContainersRequest {
 
 message ListContainersResponse {
 	repeated Container containers = 1;
-}
-
-message StartProcessRequest {
-	string container_id = 1 [(gogoproto.customname) = "ContainerID"];
-	Process process = 2;
-	bool console = 3;
-	string stdin = 4;
-	string stdout = 5;
-	string stderr = 6;
-}
-
-message StartProcessResponse {
-	Process process = 1;
 }
 
 message Container {
@@ -118,30 +99,20 @@ message ResumeContainerRequest {
 	string id = 1 [(gogoproto.customname) = "ID"];
 }
 
-message GetProcessRequest {
-	string container_id = 1 [(gogoproto.customname) = "ContainerID"];
-	string process_id = 2 [(gogoproto.customname) = "ProcessID"];
+message EventsRequest {
 }
 
-message GetProcessResponse {
-	Process process = 1;
+enum EventType {
+	EXIT = 0;
+	OOM = 1;
+	CREATE = 2;
+	START = 3;
+	EXEC_ADDED = 4;
 }
 
-message SignalProcessRequest {
-	string container_id = 1 [(gogoproto.customname) = "ContainerID"];
-	string process_id = 2 [(gogoproto.customname) = "ProcessID"];
-	uint32 signal = 3;
-}
-
-message DeleteProcessRequest {
-	string container_id = 1 [(gogoproto.customname) = "ContainerID"];
-	string process_id = 2 [(gogoproto.customname) = "ProcessID"];
-}
-
-message ListProcessesRequest {
+message Event {
 	string id = 1 [(gogoproto.customname) = "ID"];
-}
-
-message ListProcessesResponse {
-	repeated Process processes = 1;
+	EventType type = 2;
+	uint32 pid = 3;
+	uint32 exit_status = 4;
 }
