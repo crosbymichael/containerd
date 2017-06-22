@@ -94,6 +94,9 @@ message ResizePtyRequest {
 	uint32 height = 3;
 }
 
+message StreamEventsRequest {
+}
+
 message StateResponse {
 	string id = 1;
 	string bundle = 2;
@@ -132,9 +135,6 @@ message CheckpointTaskRequest {
 
 message ShimInfoResponse {
 	uint32 shim_pid = 1;
-}
-
-message StreamEventsRequest {
 }
 
 message Event {

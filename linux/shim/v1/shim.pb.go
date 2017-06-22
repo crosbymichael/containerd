@@ -11,20 +11,38 @@
 	It has these top-level messages:
 		CreateTaskRequest
 		CreateTaskResponse
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+		StartTaskRequest
+		DeleteTaskRequest
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		DeleteResponse
 		DeleteProcessRequest
 		ExecProcessRequest
 		ExecProcessResponse
 		ResizePtyRequest
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		StateResponse
+=======
+		StreamEventsRequest
+		StateRequest
+		StateResponse
+		PauseTaskRequest
+		ResumeTaskRequest
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		KillRequest
 		CloseIORequest
 		ListProcessesRequest
 		ListProcessesResponse
 		CheckpointTaskRequest
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		ShimInfoResponse
 		StreamEventsRequest
 		Event
+=======
+		ShimInfoRequest
+		ShimInfoResponse
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 */
 package shim
 
@@ -65,6 +83,7 @@ var _ = time.Kitchen
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion2 // please upgrade the proto package
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 type Event_EventType int32
 
 const (
@@ -98,6 +117,8 @@ func (x Event_EventType) String() string {
 }
 func (Event_EventType) EnumDescriptor() ([]byte, []int) { return fileDescriptorShim, []int{15, 0} }
 
+=======
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 type CreateTaskRequest struct {
 	ID               string                    `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Bundle           string                    `protobuf:"bytes,2,opt,name=bundle,proto3" json:"bundle,omitempty"`
@@ -122,6 +143,23 @@ type CreateTaskResponse struct {
 func (m *CreateTaskResponse) Reset()                    { *m = CreateTaskResponse{} }
 func (*CreateTaskResponse) ProtoMessage()               {}
 func (*CreateTaskResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{1} }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+
+type StartTaskRequest struct {
+}
+
+func (m *StartTaskRequest) Reset()                    { *m = StartTaskRequest{} }
+func (*StartTaskRequest) ProtoMessage()               {}
+func (*StartTaskRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{2} }
+
+type DeleteTaskRequest struct {
+}
+
+func (m *DeleteTaskRequest) Reset()                    { *m = DeleteTaskRequest{} }
+func (*DeleteTaskRequest) ProtoMessage()               {}
+func (*DeleteTaskRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{3} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type DeleteResponse struct {
 	Pid        uint32    `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`
@@ -151,7 +189,11 @@ type ExecProcessRequest struct {
 
 func (m *ExecProcessRequest) Reset()                    { *m = ExecProcessRequest{} }
 func (*ExecProcessRequest) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*ExecProcessRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{4} }
+=======
+func (*ExecProcessRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{6} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type ExecProcessResponse struct {
 	Pid uint32 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`
@@ -159,7 +201,11 @@ type ExecProcessResponse struct {
 
 func (m *ExecProcessResponse) Reset()                    { *m = ExecProcessResponse{} }
 func (*ExecProcessResponse) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*ExecProcessResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{5} }
+=======
+func (*ExecProcessResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{7} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type ResizePtyRequest struct {
 	Pid    uint32 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`
@@ -169,7 +215,25 @@ type ResizePtyRequest struct {
 
 func (m *ResizePtyRequest) Reset()                    { *m = ResizePtyRequest{} }
 func (*ResizePtyRequest) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*ResizePtyRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{6} }
+=======
+func (*ResizePtyRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{8} }
+
+type StreamEventsRequest struct {
+}
+
+func (m *StreamEventsRequest) Reset()                    { *m = StreamEventsRequest{} }
+func (*StreamEventsRequest) ProtoMessage()               {}
+func (*StreamEventsRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{9} }
+
+type StateRequest struct {
+}
+
+func (m *StateRequest) Reset()                    { *m = StateRequest{} }
+func (*StateRequest) ProtoMessage()               {}
+func (*StateRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{10} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type StateResponse struct {
 	ID        string                         `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -185,7 +249,25 @@ type StateResponse struct {
 
 func (m *StateResponse) Reset()                    { *m = StateResponse{} }
 func (*StateResponse) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*StateResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{7} }
+=======
+func (*StateResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{11} }
+
+type PauseTaskRequest struct {
+}
+
+func (m *PauseTaskRequest) Reset()                    { *m = PauseTaskRequest{} }
+func (*PauseTaskRequest) ProtoMessage()               {}
+func (*PauseTaskRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{12} }
+
+type ResumeTaskRequest struct {
+}
+
+func (m *ResumeTaskRequest) Reset()                    { *m = ResumeTaskRequest{} }
+func (*ResumeTaskRequest) ProtoMessage()               {}
+func (*ResumeTaskRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{13} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type KillRequest struct {
 	Signal uint32 `protobuf:"varint,1,opt,name=signal,proto3" json:"signal,omitempty"`
@@ -195,7 +277,11 @@ type KillRequest struct {
 
 func (m *KillRequest) Reset()                    { *m = KillRequest{} }
 func (*KillRequest) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*KillRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{8} }
+=======
+func (*KillRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{14} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type CloseIORequest struct {
 	Pid   uint32 `protobuf:"varint,1,opt,name=pid,proto3" json:"pid,omitempty"`
@@ -204,7 +290,11 @@ type CloseIORequest struct {
 
 func (m *CloseIORequest) Reset()                    { *m = CloseIORequest{} }
 func (*CloseIORequest) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*CloseIORequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{9} }
+=======
+func (*CloseIORequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{15} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type ListProcessesRequest struct {
 	ID string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -212,7 +302,11 @@ type ListProcessesRequest struct {
 
 func (m *ListProcessesRequest) Reset()                    { *m = ListProcessesRequest{} }
 func (*ListProcessesRequest) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*ListProcessesRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{10} }
+=======
+func (*ListProcessesRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{16} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type ListProcessesResponse struct {
 	Processes []*containerd_v1_types.Process `protobuf:"bytes,1,rep,name=processes" json:"processes,omitempty"`
@@ -220,7 +314,11 @@ type ListProcessesResponse struct {
 
 func (m *ListProcessesResponse) Reset()                    { *m = ListProcessesResponse{} }
 func (*ListProcessesResponse) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*ListProcessesResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{11} }
+=======
+func (*ListProcessesResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{17} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type CheckpointTaskRequest struct {
 	Path    string            `protobuf:"bytes,1,opt,name=path,proto3" json:"path,omitempty"`
@@ -229,7 +327,18 @@ type CheckpointTaskRequest struct {
 
 func (m *CheckpointTaskRequest) Reset()                    { *m = CheckpointTaskRequest{} }
 func (*CheckpointTaskRequest) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*CheckpointTaskRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{12} }
+=======
+func (*CheckpointTaskRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{18} }
+
+type ShimInfoRequest struct {
+}
+
+func (m *ShimInfoRequest) Reset()                    { *m = ShimInfoRequest{} }
+func (*ShimInfoRequest) ProtoMessage()               {}
+func (*ShimInfoRequest) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{19} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 type ShimInfoResponse struct {
 	ShimPid uint32 `protobuf:"varint,1,opt,name=shim_pid,json=shimPid,proto3" json:"shim_pid,omitempty"`
@@ -237,6 +346,7 @@ type ShimInfoResponse struct {
 
 func (m *ShimInfoResponse) Reset()                    { *m = ShimInfoResponse{} }
 func (*ShimInfoResponse) ProtoMessage()               {}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (*ShimInfoResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{13} }
 
 type StreamEventsRequest struct {
@@ -257,25 +367,46 @@ type Event struct {
 func (m *Event) Reset()                    { *m = Event{} }
 func (*Event) ProtoMessage()               {}
 func (*Event) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{15} }
+=======
+func (*ShimInfoResponse) Descriptor() ([]byte, []int) { return fileDescriptorShim, []int{20} }
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 
 func init() {
 	proto.RegisterType((*CreateTaskRequest)(nil), "containerd.runtime.linux.shim.v1.CreateTaskRequest")
 	proto.RegisterType((*CreateTaskResponse)(nil), "containerd.runtime.linux.shim.v1.CreateTaskResponse")
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+	proto.RegisterType((*StartTaskRequest)(nil), "containerd.runtime.linux.shim.v1.StartTaskRequest")
+	proto.RegisterType((*DeleteTaskRequest)(nil), "containerd.runtime.linux.shim.v1.DeleteTaskRequest")
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	proto.RegisterType((*DeleteResponse)(nil), "containerd.runtime.linux.shim.v1.DeleteResponse")
 	proto.RegisterType((*DeleteProcessRequest)(nil), "containerd.runtime.linux.shim.v1.DeleteProcessRequest")
 	proto.RegisterType((*ExecProcessRequest)(nil), "containerd.runtime.linux.shim.v1.ExecProcessRequest")
 	proto.RegisterType((*ExecProcessResponse)(nil), "containerd.runtime.linux.shim.v1.ExecProcessResponse")
 	proto.RegisterType((*ResizePtyRequest)(nil), "containerd.runtime.linux.shim.v1.ResizePtyRequest")
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	proto.RegisterType((*StateResponse)(nil), "containerd.runtime.linux.shim.v1.StateResponse")
+=======
+	proto.RegisterType((*StreamEventsRequest)(nil), "containerd.runtime.linux.shim.v1.StreamEventsRequest")
+	proto.RegisterType((*StateRequest)(nil), "containerd.runtime.linux.shim.v1.StateRequest")
+	proto.RegisterType((*StateResponse)(nil), "containerd.runtime.linux.shim.v1.StateResponse")
+	proto.RegisterType((*PauseTaskRequest)(nil), "containerd.runtime.linux.shim.v1.PauseTaskRequest")
+	proto.RegisterType((*ResumeTaskRequest)(nil), "containerd.runtime.linux.shim.v1.ResumeTaskRequest")
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	proto.RegisterType((*KillRequest)(nil), "containerd.runtime.linux.shim.v1.KillRequest")
 	proto.RegisterType((*CloseIORequest)(nil), "containerd.runtime.linux.shim.v1.CloseIORequest")
 	proto.RegisterType((*ListProcessesRequest)(nil), "containerd.runtime.linux.shim.v1.ListProcessesRequest")
 	proto.RegisterType((*ListProcessesResponse)(nil), "containerd.runtime.linux.shim.v1.ListProcessesResponse")
 	proto.RegisterType((*CheckpointTaskRequest)(nil), "containerd.runtime.linux.shim.v1.CheckpointTaskRequest")
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	proto.RegisterType((*ShimInfoResponse)(nil), "containerd.runtime.linux.shim.v1.ShimInfoResponse")
 	proto.RegisterType((*StreamEventsRequest)(nil), "containerd.runtime.linux.shim.v1.StreamEventsRequest")
 	proto.RegisterType((*Event)(nil), "containerd.runtime.linux.shim.v1.Event")
 	proto.RegisterEnum("containerd.runtime.linux.shim.v1.Event_EventType", Event_EventType_name, Event_EventType_value)
+=======
+	proto.RegisterType((*ShimInfoRequest)(nil), "containerd.runtime.linux.shim.v1.ShimInfoRequest")
+	proto.RegisterType((*ShimInfoResponse)(nil), "containerd.runtime.linux.shim.v1.ShimInfoResponse")
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -290,6 +421,7 @@ const _ = grpc.SupportPackageIsVersion4
 
 type ShimClient interface {
 	// State returns shim and task state information.
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	State(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*StateResponse, error)
 	Create(ctx context.Context, in *CreateTaskRequest, opts ...grpc.CallOption) (*CreateTaskResponse, error)
 	Start(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
@@ -298,6 +430,16 @@ type ShimClient interface {
 	ListProcesses(ctx context.Context, in *ListProcessesRequest, opts ...grpc.CallOption) (*ListProcessesResponse, error)
 	Pause(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
 	Resume(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
+=======
+	State(ctx context.Context, in *StateRequest, opts ...grpc.CallOption) (*StateResponse, error)
+	Create(ctx context.Context, in *CreateTaskRequest, opts ...grpc.CallOption) (*CreateTaskResponse, error)
+	Start(ctx context.Context, in *StartTaskRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
+	Delete(ctx context.Context, in *DeleteTaskRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
+	DeleteProcess(ctx context.Context, in *DeleteProcessRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
+	ListProcesses(ctx context.Context, in *ListProcessesRequest, opts ...grpc.CallOption) (*ListProcessesResponse, error)
+	Pause(ctx context.Context, in *PauseTaskRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
+	Resume(ctx context.Context, in *ResumeTaskRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	Checkpoint(ctx context.Context, in *CheckpointTaskRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
 	Stream(ctx context.Context, in *StreamEventsRequest, opts ...grpc.CallOption) (Shim_StreamClient, error)
 	Kill(ctx context.Context, in *KillRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
@@ -305,7 +447,11 @@ type ShimClient interface {
 	ResizePty(ctx context.Context, in *ResizePtyRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
 	CloseIO(ctx context.Context, in *CloseIORequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error)
 	// ShimInfo returns information about the shim.
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	ShimInfo(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*ShimInfoResponse, error)
+=======
+	ShimInfo(ctx context.Context, in *ShimInfoRequest, opts ...grpc.CallOption) (*ShimInfoResponse, error)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 }
 
 type shimClient struct {
@@ -316,7 +462,11 @@ func NewShimClient(cc *grpc.ClientConn) ShimClient {
 	return &shimClient{cc}
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (c *shimClient) State(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*StateResponse, error) {
+=======
+func (c *shimClient) State(ctx context.Context, in *StateRequest, opts ...grpc.CallOption) (*StateResponse, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	out := new(StateResponse)
 	err := grpc.Invoke(ctx, "/containerd.runtime.linux.shim.v1.Shim/State", in, out, c.cc, opts...)
 	if err != nil {
@@ -334,7 +484,11 @@ func (c *shimClient) Create(ctx context.Context, in *CreateTaskRequest, opts ...
 	return out, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (c *shimClient) Start(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
+=======
+func (c *shimClient) Start(ctx context.Context, in *StartTaskRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	out := new(google_protobuf1.Empty)
 	err := grpc.Invoke(ctx, "/containerd.runtime.linux.shim.v1.Shim/Start", in, out, c.cc, opts...)
 	if err != nil {
@@ -343,7 +497,11 @@ func (c *shimClient) Start(ctx context.Context, in *google_protobuf1.Empty, opts
 	return out, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (c *shimClient) Delete(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*DeleteResponse, error) {
+=======
+func (c *shimClient) Delete(ctx context.Context, in *DeleteTaskRequest, opts ...grpc.CallOption) (*DeleteResponse, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	out := new(DeleteResponse)
 	err := grpc.Invoke(ctx, "/containerd.runtime.linux.shim.v1.Shim/Delete", in, out, c.cc, opts...)
 	if err != nil {
@@ -370,7 +528,11 @@ func (c *shimClient) ListProcesses(ctx context.Context, in *ListProcessesRequest
 	return out, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (c *shimClient) Pause(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
+=======
+func (c *shimClient) Pause(ctx context.Context, in *PauseTaskRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	out := new(google_protobuf1.Empty)
 	err := grpc.Invoke(ctx, "/containerd.runtime.linux.shim.v1.Shim/Pause", in, out, c.cc, opts...)
 	if err != nil {
@@ -379,7 +541,11 @@ func (c *shimClient) Pause(ctx context.Context, in *google_protobuf1.Empty, opts
 	return out, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (c *shimClient) Resume(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
+=======
+func (c *shimClient) Resume(ctx context.Context, in *ResumeTaskRequest, opts ...grpc.CallOption) (*google_protobuf1.Empty, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	out := new(google_protobuf1.Empty)
 	err := grpc.Invoke(ctx, "/containerd.runtime.linux.shim.v1.Shim/Resume", in, out, c.cc, opts...)
 	if err != nil {
@@ -413,7 +579,11 @@ func (c *shimClient) Stream(ctx context.Context, in *StreamEventsRequest, opts .
 }
 
 type Shim_StreamClient interface {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	Recv() (*Event, error)
+=======
+	Recv() (*containerd_v1_types.Event, error)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	grpc.ClientStream
 }
 
@@ -421,8 +591,13 @@ type shimStreamClient struct {
 	grpc.ClientStream
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (x *shimStreamClient) Recv() (*Event, error) {
 	m := new(Event)
+=======
+func (x *shimStreamClient) Recv() (*containerd_v1_types.Event, error) {
+	m := new(containerd_v1_types.Event)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -465,7 +640,11 @@ func (c *shimClient) CloseIO(ctx context.Context, in *CloseIORequest, opts ...gr
 	return out, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (c *shimClient) ShimInfo(ctx context.Context, in *google_protobuf1.Empty, opts ...grpc.CallOption) (*ShimInfoResponse, error) {
+=======
+func (c *shimClient) ShimInfo(ctx context.Context, in *ShimInfoRequest, opts ...grpc.CallOption) (*ShimInfoResponse, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	out := new(ShimInfoResponse)
 	err := grpc.Invoke(ctx, "/containerd.runtime.linux.shim.v1.Shim/ShimInfo", in, out, c.cc, opts...)
 	if err != nil {
@@ -478,6 +657,7 @@ func (c *shimClient) ShimInfo(ctx context.Context, in *google_protobuf1.Empty, o
 
 type ShimServer interface {
 	// State returns shim and task state information.
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	State(context.Context, *google_protobuf1.Empty) (*StateResponse, error)
 	Create(context.Context, *CreateTaskRequest) (*CreateTaskResponse, error)
 	Start(context.Context, *google_protobuf1.Empty) (*google_protobuf1.Empty, error)
@@ -486,6 +666,16 @@ type ShimServer interface {
 	ListProcesses(context.Context, *ListProcessesRequest) (*ListProcessesResponse, error)
 	Pause(context.Context, *google_protobuf1.Empty) (*google_protobuf1.Empty, error)
 	Resume(context.Context, *google_protobuf1.Empty) (*google_protobuf1.Empty, error)
+=======
+	State(context.Context, *StateRequest) (*StateResponse, error)
+	Create(context.Context, *CreateTaskRequest) (*CreateTaskResponse, error)
+	Start(context.Context, *StartTaskRequest) (*google_protobuf1.Empty, error)
+	Delete(context.Context, *DeleteTaskRequest) (*DeleteResponse, error)
+	DeleteProcess(context.Context, *DeleteProcessRequest) (*DeleteResponse, error)
+	ListProcesses(context.Context, *ListProcessesRequest) (*ListProcessesResponse, error)
+	Pause(context.Context, *PauseTaskRequest) (*google_protobuf1.Empty, error)
+	Resume(context.Context, *ResumeTaskRequest) (*google_protobuf1.Empty, error)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	Checkpoint(context.Context, *CheckpointTaskRequest) (*google_protobuf1.Empty, error)
 	Stream(*StreamEventsRequest, Shim_StreamServer) error
 	Kill(context.Context, *KillRequest) (*google_protobuf1.Empty, error)
@@ -493,7 +683,11 @@ type ShimServer interface {
 	ResizePty(context.Context, *ResizePtyRequest) (*google_protobuf1.Empty, error)
 	CloseIO(context.Context, *CloseIORequest) (*google_protobuf1.Empty, error)
 	// ShimInfo returns information about the shim.
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	ShimInfo(context.Context, *google_protobuf1.Empty) (*ShimInfoResponse, error)
+=======
+	ShimInfo(context.Context, *ShimInfoRequest) (*ShimInfoResponse, error)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 }
 
 func RegisterShimServer(s *grpc.Server, srv ShimServer) {
@@ -501,7 +695,11 @@ func RegisterShimServer(s *grpc.Server, srv ShimServer) {
 }
 
 func _Shim_State_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	in := new(google_protobuf1.Empty)
+=======
+	in := new(StateRequest)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -513,7 +711,11 @@ func _Shim_State_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: "/containerd.runtime.linux.shim.v1.Shim/State",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		return srv.(ShimServer).State(ctx, req.(*google_protobuf1.Empty))
+=======
+		return srv.(ShimServer).State(ctx, req.(*StateRequest))
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -537,7 +739,11 @@ func _Shim_Create_Handler(srv interface{}, ctx context.Context, dec func(interfa
 }
 
 func _Shim_Start_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	in := new(google_protobuf1.Empty)
+=======
+	in := new(StartTaskRequest)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -549,13 +755,21 @@ func _Shim_Start_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: "/containerd.runtime.linux.shim.v1.Shim/Start",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		return srv.(ShimServer).Start(ctx, req.(*google_protobuf1.Empty))
+=======
+		return srv.(ShimServer).Start(ctx, req.(*StartTaskRequest))
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Shim_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	in := new(google_protobuf1.Empty)
+=======
+	in := new(DeleteTaskRequest)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -567,7 +781,11 @@ func _Shim_Delete_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: "/containerd.runtime.linux.shim.v1.Shim/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		return srv.(ShimServer).Delete(ctx, req.(*google_protobuf1.Empty))
+=======
+		return srv.(ShimServer).Delete(ctx, req.(*DeleteTaskRequest))
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -609,7 +827,11 @@ func _Shim_ListProcesses_Handler(srv interface{}, ctx context.Context, dec func(
 }
 
 func _Shim_Pause_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	in := new(google_protobuf1.Empty)
+=======
+	in := new(PauseTaskRequest)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -621,13 +843,21 @@ func _Shim_Pause_Handler(srv interface{}, ctx context.Context, dec func(interfac
 		FullMethod: "/containerd.runtime.linux.shim.v1.Shim/Pause",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		return srv.(ShimServer).Pause(ctx, req.(*google_protobuf1.Empty))
+=======
+		return srv.(ShimServer).Pause(ctx, req.(*PauseTaskRequest))
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Shim_Resume_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	in := new(google_protobuf1.Empty)
+=======
+	in := new(ResumeTaskRequest)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -639,7 +869,11 @@ func _Shim_Resume_Handler(srv interface{}, ctx context.Context, dec func(interfa
 		FullMethod: "/containerd.runtime.linux.shim.v1.Shim/Resume",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		return srv.(ShimServer).Resume(ctx, req.(*google_protobuf1.Empty))
+=======
+		return srv.(ShimServer).Resume(ctx, req.(*ResumeTaskRequest))
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -671,7 +905,11 @@ func _Shim_Stream_Handler(srv interface{}, stream grpc.ServerStream) error {
 }
 
 type Shim_StreamServer interface {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	Send(*Event) error
+=======
+	Send(*containerd_v1_types.Event) error
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	grpc.ServerStream
 }
 
@@ -679,7 +917,11 @@ type shimStreamServer struct {
 	grpc.ServerStream
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (x *shimStreamServer) Send(m *Event) error {
+=======
+func (x *shimStreamServer) Send(m *containerd_v1_types.Event) error {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -756,7 +998,11 @@ func _Shim_CloseIO_Handler(srv interface{}, ctx context.Context, dec func(interf
 }
 
 func _Shim_ShimInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	in := new(google_protobuf1.Empty)
+=======
+	in := new(ShimInfoRequest)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -768,7 +1014,11 @@ func _Shim_ShimInfo_Handler(srv interface{}, ctx context.Context, dec func(inter
 		FullMethod: "/containerd.runtime.linux.shim.v1.Shim/ShimInfo",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		return srv.(ShimServer).ShimInfo(ctx, req.(*google_protobuf1.Empty))
+=======
+		return srv.(ShimServer).ShimInfo(ctx, req.(*ShimInfoRequest))
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -824,12 +1074,21 @@ var _Shim_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ResizePty",
 			Handler:    _Shim_ResizePty_Handler,
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 		},
 		{
 			MethodName: "CloseIO",
 			Handler:    _Shim_CloseIO_Handler,
 		},
 		{
+=======
+		},
+		{
+			MethodName: "CloseIO",
+			Handler:    _Shim_CloseIO_Handler,
+		},
+		{
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 			MethodName: "ShimInfo",
 			Handler:    _Shim_ShimInfo_Handler,
 		},
@@ -955,6 +1214,45 @@ func (m *CreateTaskResponse) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (m *StartTaskRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *StartTaskRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	return i, nil
+}
+
+func (m *DeleteTaskRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *DeleteTaskRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	return i, nil
+}
+
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (m *DeleteResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1126,7 +1424,11 @@ func (m *ResizePtyRequest) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *StateResponse) Marshal() (dAtA []byte, err error) {
+=======
+func (m *StreamEventsRequest) Marshal() (dAtA []byte, err error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -1136,7 +1438,11 @@ func (m *StateResponse) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *StateResponse) MarshalTo(dAtA []byte) (int, error) {
+=======
+func (m *StreamEventsRequest) MarshalTo(dAtA []byte) (int, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	var i int
 	_ = i
 	var l int
@@ -1206,6 +1512,45 @@ func (m *StateResponse) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (m *PauseTaskRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *PauseTaskRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	return i, nil
+}
+
+func (m *ResumeTaskRequest) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *ResumeTaskRequest) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	return i, nil
+}
+
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (m *KillRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1372,6 +1717,7 @@ func (m *CheckpointTaskRequest) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *ShimInfoResponse) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
@@ -1396,6 +1742,9 @@ func (m *ShimInfoResponse) MarshalTo(dAtA []byte) (int, error) {
 }
 
 func (m *StreamEventsRequest) Marshal() (dAtA []byte, err error) {
+=======
+func (m *ShimInfoRequest) Marshal() (dAtA []byte, err error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -1405,7 +1754,11 @@ func (m *StreamEventsRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *StreamEventsRequest) MarshalTo(dAtA []byte) (int, error) {
+=======
+func (m *ShimInfoRequest) MarshalTo(dAtA []byte) (int, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	var i int
 	_ = i
 	var l int
@@ -1413,7 +1766,11 @@ func (m *StreamEventsRequest) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *Event) Marshal() (dAtA []byte, err error) {
+=======
+func (m *ShimInfoResponse) Marshal() (dAtA []byte, err error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalTo(dAtA)
@@ -1423,11 +1780,16 @@ func (m *Event) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *Event) MarshalTo(dAtA []byte) (int, error) {
+=======
+func (m *ShimInfoResponse) MarshalTo(dAtA []byte) (int, error) {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	var i int
 	_ = i
 	var l int
 	_ = l
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	if len(m.ID) > 0 {
 		dAtA[i] = 0xa
 		i++
@@ -1457,6 +1819,13 @@ func (m *Event) MarshalTo(dAtA []byte) (int, error) {
 		return 0, err
 	}
 	i += n3
+=======
+	if m.ShimPid != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintShim(dAtA, i, uint64(m.ShimPid))
+	}
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	return i, nil
 }
 
@@ -1543,6 +1912,21 @@ func (m *CreateTaskResponse) Size() (n int) {
 	return n
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (m *StartTaskRequest) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+func (m *DeleteTaskRequest) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (m *DeleteResponse) Size() (n int) {
 	var l int
 	_ = l
@@ -1615,6 +1999,21 @@ func (m *ResizePtyRequest) Size() (n int) {
 	return n
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (m *StreamEventsRequest) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+func (m *StateRequest) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (m *StateResponse) Size() (n int) {
 	var l int
 	_ = l
@@ -1656,6 +2055,21 @@ func (m *StateResponse) Size() (n int) {
 	return n
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (m *PauseTaskRequest) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+func (m *ResumeTaskRequest) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (m *KillRequest) Size() (n int) {
 	var l int
 	_ = l
@@ -1723,6 +2137,7 @@ func (m *CheckpointTaskRequest) Size() (n int) {
 	return n
 }
 
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *ShimInfoResponse) Size() (n int) {
 	var l int
 	_ = l
@@ -1756,6 +2171,20 @@ func (m *Event) Size() (n int) {
 	}
 	l = github_com_gogo_protobuf_types.SizeOfStdTime(m.ExitedAt)
 	n += 1 + l + sovShim(uint64(l))
+=======
+func (m *ShimInfoRequest) Size() (n int) {
+	var l int
+	_ = l
+	return n
+}
+
+func (m *ShimInfoResponse) Size() (n int) {
+	var l int
+	_ = l
+	if m.ShimPid != 0 {
+		n += 1 + sovShim(uint64(m.ShimPid))
+	}
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	return n
 }
 
@@ -1801,6 +2230,27 @@ func (this *CreateTaskResponse) String() string {
 	}, "")
 	return s
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (this *StartTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&StartTaskRequest{`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *DeleteTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&DeleteTaskRequest{`,
+		`}`,
+	}, "")
+	return s
+}
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (this *DeleteResponse) String() string {
 	if this == nil {
 		return "nil"
@@ -1838,6 +2288,7 @@ func (this *ExecProcessRequest) String() string {
 	return s
 }
 func (this *ExecProcessResponse) String() string {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	if this == nil {
 		return "nil"
 	}
@@ -1851,6 +2302,21 @@ func (this *ResizePtyRequest) String() string {
 	if this == nil {
 		return "nil"
 	}
+=======
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ExecProcessResponse{`,
+		`Pid:` + fmt.Sprintf("%v", this.Pid) + `,`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ResizePtyRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	s := strings.Join([]string{`&ResizePtyRequest{`,
 		`Pid:` + fmt.Sprintf("%v", this.Pid) + `,`,
 		`Width:` + fmt.Sprintf("%v", this.Width) + `,`,
@@ -1859,6 +2325,27 @@ func (this *ResizePtyRequest) String() string {
 	}, "")
 	return s
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (this *StreamEventsRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&StreamEventsRequest{`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *StateRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&StateRequest{`,
+		`}`,
+	}, "")
+	return s
+}
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (this *StateResponse) String() string {
 	if this == nil {
 		return "nil"
@@ -1877,6 +2364,7 @@ func (this *StateResponse) String() string {
 	}, "")
 	return s
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (this *KillRequest) String() string {
 	if this == nil {
 		return "nil"
@@ -1896,16 +2384,31 @@ func (this *CloseIORequest) String() string {
 	s := strings.Join([]string{`&CloseIORequest{`,
 		`Pid:` + fmt.Sprintf("%v", this.Pid) + `,`,
 		`Stdin:` + fmt.Sprintf("%v", this.Stdin) + `,`,
+=======
+func (this *PauseTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&PauseTaskRequest{`,
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		`}`,
 	}, "")
 	return s
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (this *ListProcessesRequest) String() string {
 	if this == nil {
 		return "nil"
 	}
 	s := strings.Join([]string{`&ListProcessesRequest{`,
 		`ID:` + fmt.Sprintf("%v", this.ID) + `,`,
+=======
+func (this *ResumeTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ResumeTaskRequest{`,
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		`}`,
 	}, "")
 	return s
@@ -1920,6 +2423,7 @@ func (this *ListProcessesResponse) String() string {
 	}, "")
 	return s
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (this *CheckpointTaskRequest) String() string {
 	if this == nil {
 		return "nil"
@@ -1937,29 +2441,57 @@ func (this *CheckpointTaskRequest) String() string {
 	s := strings.Join([]string{`&CheckpointTaskRequest{`,
 		`Path:` + fmt.Sprintf("%v", this.Path) + `,`,
 		`Options:` + mapStringForOptions + `,`,
+=======
+func (this *CloseIORequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&CloseIORequest{`,
+		`Pid:` + fmt.Sprintf("%v", this.Pid) + `,`,
+		`Stdin:` + fmt.Sprintf("%v", this.Stdin) + `,`,
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		`}`,
 	}, "")
 	return s
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (this *ShimInfoResponse) String() string {
 	if this == nil {
 		return "nil"
 	}
 	s := strings.Join([]string{`&ShimInfoResponse{`,
 		`ShimPid:` + fmt.Sprintf("%v", this.ShimPid) + `,`,
+=======
+func (this *ListProcessesRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ListProcessesRequest{`,
+		`ID:` + fmt.Sprintf("%v", this.ID) + `,`,
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		`}`,
 	}, "")
 	return s
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (this *StreamEventsRequest) String() string {
 	if this == nil {
 		return "nil"
 	}
 	s := strings.Join([]string{`&StreamEventsRequest{`,
+=======
+func (this *ListProcessesResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ListProcessesResponse{`,
+		`Processes:` + strings.Replace(fmt.Sprintf("%v", this.Processes), "Process", "containerd_v1_types.Process", 1) + `,`,
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		`}`,
 	}, "")
 	return s
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (this *Event) String() string {
 	if this == nil {
 		return "nil"
@@ -1970,6 +2502,44 @@ func (this *Event) String() string {
 		`Pid:` + fmt.Sprintf("%v", this.Pid) + `,`,
 		`ExitStatus:` + fmt.Sprintf("%v", this.ExitStatus) + `,`,
 		`ExitedAt:` + strings.Replace(strings.Replace(this.ExitedAt.String(), "Timestamp", "google_protobuf3.Timestamp", 1), `&`, ``, 1) + `,`,
+=======
+func (this *CheckpointTaskRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	keysForOptions := make([]string, 0, len(this.Options))
+	for k, _ := range this.Options {
+		keysForOptions = append(keysForOptions, k)
+	}
+	github_com_gogo_protobuf_sortkeys.Strings(keysForOptions)
+	mapStringForOptions := "map[string]string{"
+	for _, k := range keysForOptions {
+		mapStringForOptions += fmt.Sprintf("%v: %v,", k, this.Options[k])
+	}
+	mapStringForOptions += "}"
+	s := strings.Join([]string{`&CheckpointTaskRequest{`,
+		`Path:` + fmt.Sprintf("%v", this.Path) + `,`,
+		`Options:` + mapStringForOptions + `,`,
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
+		`}`,
+	}, "")
+	return s
+}
+func (this *ShimInfoRequest) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ShimInfoRequest{`,
+		`}`,
+	}, "")
+	return s
+}
+func (this *ShimInfoResponse) String() string {
+	if this == nil {
+		return "nil"
+	}
+	s := strings.Join([]string{`&ShimInfoResponse{`,
+		`ShimPid:` + fmt.Sprintf("%v", this.ShimPid) + `,`,
 		`}`,
 	}, "")
 	return s
@@ -2384,6 +2954,109 @@ func (m *CreateTaskResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (m *StartTaskRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowShim
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: StartTaskRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: StartTaskRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipShim(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthShim
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *DeleteTaskRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowShim
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: DeleteTaskRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: DeleteTaskRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipShim(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthShim
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (m *DeleteResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -2937,6 +3610,109 @@ func (m *ResizePtyRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (m *StreamEventsRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowShim
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: StreamEventsRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: StreamEventsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipShim(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthShim
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *StateRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowShim
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: StateRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: StateRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipShim(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthShim
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (m *StateResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3221,6 +3997,109 @@ func (m *StateResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
+=======
+func (m *PauseTaskRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowShim
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: PauseTaskRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: PauseTaskRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipShim(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthShim
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *ResumeTaskRequest) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowShim
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= (uint64(b) & 0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: ResumeTaskRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ResumeTaskRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipShim(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthShim
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 func (m *KillRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3773,6 +4652,7 @@ func (m *CheckpointTaskRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *ShimInfoResponse) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
@@ -3843,6 +4723,9 @@ func (m *ShimInfoResponse) Unmarshal(dAtA []byte) error {
 	return nil
 }
 func (m *StreamEventsRequest) Unmarshal(dAtA []byte) error {
+=======
+func (m *ShimInfoRequest) Unmarshal(dAtA []byte) error {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3865,10 +4748,17 @@ func (m *StreamEventsRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 			return fmt.Errorf("proto: StreamEventsRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: StreamEventsRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+=======
+			return fmt.Errorf("proto: ShimInfoRequest: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ShimInfoRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		}
 		switch fieldNum {
 		default:
@@ -3892,7 +4782,11 @@ func (m *StreamEventsRequest) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 func (m *Event) Unmarshal(dAtA []byte) error {
+=======
+func (m *ShimInfoResponse) Unmarshal(dAtA []byte) error {
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -3915,6 +4809,7 @@ func (m *Event) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 			return fmt.Errorf("proto: Event: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
@@ -4012,6 +4907,19 @@ func (m *Event) Unmarshal(dAtA []byte) error {
 				return fmt.Errorf("proto: wrong wireType = %d for field ExitedAt", wireType)
 			}
 			var msglen int
+=======
+			return fmt.Errorf("proto: ShimInfoResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: ShimInfoResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ShimPid", wireType)
+			}
+			m.ShimPid = 0
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowShim
@@ -4021,11 +4929,16 @@ func (m *Event) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 				msglen |= (int(b) & 0x7F) << shift
+=======
+				m.ShimPid |= (uint32(b) & 0x7F) << shift
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 				if b < 0x80 {
 					break
 				}
 			}
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 			if msglen < 0 {
 				return ErrInvalidLengthShim
 			}
@@ -4037,6 +4950,8 @@ func (m *Event) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
+=======
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 		default:
 			iNdEx = preIndex
 			skippy, err := skipShim(dAtA[iNdEx:])
@@ -4168,6 +5083,7 @@ func init() {
 }
 
 var fileDescriptorShim = []byte{
+<<<<<<< 8644a08c9626cff5913edbf32d31b658488bf5d3:linux/shim/v1/shim.pb.go
 	// 1186 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x57, 0xcf, 0x73, 0xdb, 0xc4,
 	0x17, 0x8f, 0xfc, 0x43, 0xb6, 0x5f, 0xbe, 0xce, 0xb8, 0xdb, 0x34, 0x5f, 0xd5, 0x65, 0x9c, 0x8c,
@@ -4244,4 +5160,79 @@ var fileDescriptorShim = []byte{
 	0xeb, 0xb6, 0x22, 0xbd, 0xbd, 0xad, 0x48, 0xdf, 0xec, 0x2e, 0xf7, 0x57, 0xf3, 0x53, 0xfe, 0x3d,
 	0x97, 0x05, 0xa4, 0xdd, 0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0x26, 0xd4, 0xa9, 0x94, 0xa8, 0x0e,
 	0x00, 0x00,
+=======
+	// 1143 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x57, 0x4b, 0x53, 0xe3, 0xc6,
+	0x13, 0x47, 0xc6, 0x18, 0xbb, 0xbd, 0xe6, 0x0f, 0xc3, 0xe3, 0xaf, 0xd5, 0xa6, 0x0c, 0xa5, 0x43,
+	0x42, 0x55, 0x6a, 0xe5, 0xc5, 0x64, 0x1f, 0x21, 0x27, 0x5e, 0x07, 0x2a, 0xa1, 0x96, 0x92, 0x37,
+	0x95, 0xaa, 0x54, 0x25, 0x94, 0xb0, 0x07, 0x7b, 0x0a, 0x59, 0xa3, 0xd5, 0x8c, 0x08, 0xce, 0x69,
+	0x4f, 0x39, 0xe7, 0x23, 0xe4, 0x90, 0xaf, 0x91, 0x73, 0x38, 0xe6, 0x98, 0xd3, 0x26, 0xcb, 0xa7,
+	0xc8, 0x31, 0x35, 0x0f, 0x61, 0xc9, 0xc6, 0x8b, 0xbc, 0x95, 0x0b, 0x9e, 0xee, 0xe9, 0x6e, 0x75,
+	0xff, 0xfa, 0x35, 0xc0, 0xe7, 0x5d, 0xc2, 0x7b, 0xf1, 0x99, 0xd3, 0xa6, 0xfd, 0x46, 0x9b, 0x06,
+	0xdc, 0x23, 0x01, 0x8e, 0x3a, 0xe9, 0xa3, 0x4f, 0x82, 0xf8, 0xaa, 0xc1, 0x7a, 0xa4, 0xdf, 0xb8,
+	0xdc, 0x92, 0xbf, 0x4e, 0x18, 0x51, 0x4e, 0xd1, 0xc6, 0x50, 0xc8, 0x89, 0xe2, 0x80, 0x93, 0x3e,
+	0x76, 0xa4, 0xb0, 0x23, 0x85, 0x2e, 0xb7, 0xac, 0x87, 0x5d, 0x4a, 0xbb, 0x3e, 0x6e, 0x48, 0xf9,
+	0xb3, 0xf8, 0xbc, 0xe1, 0x05, 0x03, 0xa5, 0x6c, 0x3d, 0x1a, 0xbd, 0xc2, 0xfd, 0x90, 0x27, 0x97,
+	0x2b, 0x5d, 0xda, 0xa5, 0xf2, 0xd8, 0x10, 0x27, 0xcd, 0x7d, 0x76, 0xaf, 0xab, 0x5e, 0x48, 0x1a,
+	0x7c, 0x10, 0x62, 0xd6, 0xe8, 0xd3, 0x38, 0xe0, 0x5a, 0x6f, 0x67, 0x0a, 0x3d, 0xee, 0xb1, 0x0b,
+	0xf9, 0x47, 0xeb, 0xae, 0x8f, 0xba, 0x29, 0xa2, 0x64, 0xdc, 0xeb, 0x87, 0x4a, 0xc0, 0xfe, 0xad,
+	0x00, 0x4b, 0xfb, 0x11, 0xf6, 0x38, 0x7e, 0xe5, 0xb1, 0x0b, 0x17, 0xbf, 0x8e, 0x31, 0xe3, 0x68,
+	0x0d, 0x0a, 0xa4, 0x63, 0x1a, 0x1b, 0xc6, 0x66, 0x65, 0xaf, 0x74, 0xf3, 0x76, 0xbd, 0x70, 0x74,
+	0xe0, 0x16, 0x48, 0x07, 0xad, 0x41, 0xe9, 0x2c, 0x0e, 0x3a, 0x3e, 0x36, 0x0b, 0xe2, 0xce, 0xd5,
+	0x14, 0x32, 0x61, 0x5e, 0x23, 0x68, 0xce, 0xca, 0x8b, 0x84, 0x44, 0x0d, 0x28, 0x45, 0x94, 0xf2,
+	0x73, 0x66, 0x16, 0x37, 0x66, 0x37, 0xab, 0xcd, 0xff, 0x3b, 0x29, 0xd4, 0xa5, 0xcf, 0xce, 0xb1,
+	0x88, 0xd5, 0xd5, 0x62, 0xc8, 0x82, 0x32, 0xc7, 0x51, 0x9f, 0x04, 0x9e, 0x6f, 0xce, 0x6d, 0x18,
+	0x9b, 0x65, 0xf7, 0x96, 0x46, 0x2b, 0x30, 0xc7, 0x78, 0x87, 0x04, 0x66, 0x49, 0x7e, 0x44, 0x11,
+	0xc2, 0x29, 0xc6, 0x3b, 0x34, 0xe6, 0xe6, 0xbc, 0x72, 0x4a, 0x51, 0x9a, 0x8f, 0xa3, 0xc8, 0x2c,
+	0xdf, 0xf2, 0x71, 0x14, 0xa1, 0x3a, 0x40, 0xbb, 0x87, 0xdb, 0x17, 0x21, 0x25, 0x01, 0x37, 0x2b,
+	0xf2, 0x2e, 0xc5, 0x41, 0x9f, 0xc2, 0x52, 0xe8, 0x45, 0x38, 0xe0, 0xa7, 0x29, 0x31, 0x90, 0x62,
+	0x8b, 0xea, 0x62, 0xff, 0x96, 0x6f, 0x7f, 0x0c, 0x28, 0x0d, 0x1f, 0x0b, 0x69, 0xc0, 0x30, 0x5a,
+	0x84, 0xd9, 0x50, 0x03, 0x58, 0x73, 0xc5, 0xd1, 0x46, 0xb0, 0xd8, 0xe2, 0x5e, 0xc4, 0x53, 0x28,
+	0xdb, 0xcb, 0xb0, 0x74, 0x80, 0x7d, 0x9c, 0x81, 0xde, 0xfe, 0xc9, 0x80, 0x05, 0xc5, 0x9d, 0x6c,
+	0x0d, 0xad, 0x43, 0x15, 0x5f, 0x11, 0x7e, 0xca, 0xb8, 0xc7, 0x63, 0x26, 0x93, 0x51, 0x73, 0x41,
+	0xb0, 0x5a, 0x92, 0x83, 0x76, 0xa1, 0x22, 0x28, 0xdc, 0x39, 0xf5, 0xb8, 0x4c, 0x49, 0xb5, 0x69,
+	0x39, 0xaa, 0x16, 0x9c, 0xa4, 0x16, 0x9c, 0x57, 0x49, 0x2d, 0xec, 0x95, 0xaf, 0xdf, 0xae, 0xcf,
+	0xfc, 0xfc, 0xd7, 0xba, 0xe1, 0x96, 0x95, 0xda, 0x2e, 0xb7, 0x37, 0x61, 0x45, 0xf9, 0x71, 0x12,
+	0xd1, 0x36, 0x66, 0x2c, 0xa9, 0x8d, 0xf1, 0xd8, 0x7e, 0x31, 0x00, 0x1d, 0x5e, 0xe1, 0xf6, 0x88,
+	0x60, 0x3a, 0x93, 0xc6, 0xa4, 0x4c, 0x16, 0xee, 0xce, 0xe4, 0xec, 0x84, 0x4c, 0x16, 0x33, 0x99,
+	0xdc, 0x84, 0x22, 0x0b, 0x71, 0x5b, 0xd6, 0x49, 0xb5, 0xb9, 0x32, 0x16, 0xe0, 0x6e, 0x30, 0x70,
+	0xa5, 0x84, 0xfd, 0x09, 0x2c, 0x67, 0x3c, 0x9c, 0x98, 0x27, 0x17, 0x16, 0x5d, 0xcc, 0xc8, 0x8f,
+	0xf8, 0x84, 0x0f, 0x26, 0x46, 0x2c, 0xdc, 0xff, 0x81, 0x74, 0x78, 0x4f, 0x23, 0xaf, 0x08, 0xe1,
+	0x66, 0x0f, 0x93, 0x6e, 0x4f, 0xb9, 0x5f, 0x73, 0x35, 0x65, 0xaf, 0xc2, 0x72, 0x8b, 0x47, 0xd8,
+	0xeb, 0x1f, 0x5e, 0xe2, 0x80, 0x27, 0xf8, 0xd8, 0x0b, 0xf0, 0x40, 0x64, 0x0b, 0x27, 0xf4, 0xaf,
+	0x05, 0xa8, 0x69, 0x86, 0x76, 0x6f, 0xda, 0x36, 0xd4, 0x8e, 0xce, 0x0e, 0x1d, 0xdd, 0x16, 0xc8,
+	0xc9, 0x1a, 0x11, 0xc8, 0x2d, 0x34, 0x1f, 0xa5, 0xdb, 0xef, 0x72, 0x4b, 0x77, 0xa0, 0x2a, 0x1a,
+	0x57, 0x8b, 0xa2, 0x1d, 0xa8, 0x84, 0x0a, 0x28, 0xcc, 0xcc, 0x39, 0xd9, 0xb6, 0x1f, 0xdd, 0xa9,
+	0x97, 0xc0, 0x39, 0x14, 0xff, 0x8f, 0x5a, 0x34, 0x5d, 0x3a, 0x95, 0x6c, 0xe9, 0x88, 0x4e, 0x3a,
+	0xf1, 0x62, 0x86, 0x47, 0x3a, 0xc9, 0xc5, 0x2c, 0xee, 0x67, 0x98, 0x47, 0x50, 0xfd, 0x92, 0xf8,
+	0xfe, 0x70, 0xa6, 0x95, 0x18, 0xe9, 0x26, 0xc5, 0x58, 0x73, 0x35, 0x25, 0x40, 0xf3, 0x7c, 0x5f,
+	0x22, 0x59, 0x76, 0xc5, 0x71, 0x1c, 0x46, 0xfb, 0x05, 0x2c, 0xec, 0xfb, 0x94, 0xe1, 0xa3, 0x97,
+	0xef, 0xad, 0x89, 0x61, 0x49, 0x97, 0x75, 0xe4, 0xb6, 0x03, 0x2b, 0x5f, 0x11, 0xc6, 0x4f, 0x12,
+	0x80, 0xee, 0x99, 0xb0, 0x76, 0x0b, 0x56, 0x47, 0xe4, 0x75, 0x2d, 0x64, 0x92, 0x62, 0x4c, 0x95,
+	0x14, 0xfb, 0x77, 0x03, 0x56, 0x87, 0x33, 0x2b, 0x3d, 0xe8, 0x11, 0x14, 0x43, 0x8f, 0xf7, 0x94,
+	0x23, 0xae, 0x3c, 0xa3, 0xef, 0x61, 0x9e, 0x86, 0x9c, 0xd0, 0x40, 0x0c, 0x16, 0xf1, 0x9d, 0x03,
+	0xe7, 0xbe, 0x4d, 0xe9, 0xdc, 0x69, 0xdd, 0x79, 0xa9, 0xcc, 0x1c, 0x06, 0x3c, 0x1a, 0xb8, 0x89,
+	0x51, 0x6b, 0x07, 0x1e, 0xa4, 0x2f, 0x04, 0x94, 0x17, 0x78, 0xa0, 0x5d, 0x10, 0x47, 0x01, 0xe5,
+	0xa5, 0xe7, 0xc7, 0x49, 0x79, 0x2b, 0x62, 0xa7, 0xf0, 0xc2, 0xb0, 0x97, 0xe0, 0x7f, 0xad, 0x1e,
+	0xe9, 0x1f, 0x05, 0xe7, 0x34, 0x49, 0xf3, 0x63, 0x58, 0x1c, 0xb2, 0x34, 0x58, 0x0f, 0xa1, 0x2c,
+	0x3c, 0x3b, 0x1d, 0xa6, 0x68, 0x5e, 0xd0, 0x27, 0xa4, 0xd3, 0xfc, 0xa7, 0x0a, 0x45, 0x21, 0x8f,
+	0x7a, 0x30, 0x27, 0xbb, 0x0d, 0x39, 0xf7, 0x87, 0x97, 0xee, 0x53, 0xab, 0x91, 0x5b, 0x5e, 0x7b,
+	0xc3, 0xa0, 0xa4, 0x76, 0x04, 0xda, 0xce, 0x81, 0xe4, 0xe8, 0x32, 0xb6, 0x3e, 0x9b, 0x4e, 0x49,
+	0x7f, 0xb4, 0x25, 0xc3, 0x8b, 0x38, 0x6a, 0xe6, 0x72, 0x37, 0xb3, 0x99, 0xac, 0xb5, 0xb1, 0x51,
+	0x7a, 0x28, 0x9e, 0x37, 0x88, 0x42, 0x49, 0xed, 0x84, 0x3c, 0x91, 0x8c, 0xed, 0x36, 0xeb, 0x49,
+	0x5e, 0xa5, 0xdb, 0x28, 0x06, 0x50, 0xcb, 0x2c, 0x21, 0xf4, 0x2c, 0xaf, 0x89, 0xec, 0x32, 0xfa,
+	0x80, 0x4f, 0xbf, 0x31, 0xa0, 0x96, 0x69, 0xc5, 0x3c, 0xdf, 0xbe, 0xab, 0xd7, 0xad, 0xe7, 0x53,
+	0xeb, 0x0d, 0x73, 0x28, 0x47, 0x5d, 0x9e, 0x1c, 0x8e, 0xce, 0xc4, 0x89, 0x39, 0xfc, 0x1a, 0x4a,
+	0x6a, 0x56, 0xe6, 0xc9, 0xe1, 0xd8, 0x54, 0x9d, 0x68, 0xf6, 0x3b, 0x80, 0xe1, 0x10, 0x40, 0xcf,
+	0x3f, 0x70, 0x64, 0xbc, 0xc7, 0x7c, 0x49, 0xed, 0x50, 0xf4, 0x34, 0x4f, 0x3d, 0x8f, 0x6d, 0x5b,
+	0xcb, 0xba, 0x73, 0x58, 0x4a, 0x99, 0x27, 0x06, 0x3a, 0x86, 0xa2, 0xd8, 0x15, 0xe8, 0xf1, 0xfd,
+	0xc6, 0x53, 0x3b, 0x65, 0xa2, 0xb7, 0x0c, 0x8a, 0xe2, 0xb9, 0x81, 0x72, 0xb4, 0xee, 0xf8, 0xc3,
+	0xc9, 0x7a, 0x3a, 0xa5, 0x96, 0xae, 0x96, 0x6f, 0xa0, 0x72, 0xfb, 0x74, 0xc9, 0x53, 0x31, 0xa3,
+	0xef, 0x9c, 0x89, 0xd1, 0xb4, 0x60, 0x5e, 0x6f, 0x3f, 0x94, 0xa3, 0x8d, 0xb2, 0x8b, 0x72, 0xa2,
+	0xd1, 0xd7, 0x50, 0x4e, 0xc6, 0x36, 0xda, 0xca, 0x91, 0xd2, 0xec, 0xd4, 0xb7, 0x9a, 0xd3, 0xa8,
+	0x28, 0x80, 0xf6, 0x8e, 0xaf, 0xdf, 0xd5, 0x67, 0xfe, 0x7c, 0x57, 0x9f, 0x79, 0x73, 0x53, 0x37,
+	0xae, 0x6f, 0xea, 0xc6, 0x1f, 0x37, 0x75, 0xe3, 0xef, 0x9b, 0xba, 0xf1, 0xed, 0xf6, 0x74, 0xff,
+	0x45, 0x7e, 0x21, 0x7e, 0xcf, 0x4a, 0x32, 0xa2, 0xed, 0x7f, 0x03, 0x00, 0x00, 0xff, 0xff, 0xe9,
+	0xf3, 0x34, 0x56, 0x83, 0x0e, 0x00, 0x00,
+>>>>>>> Move shim protos into linux pkg:linux/shim/v1/shim.pb.go
 }
