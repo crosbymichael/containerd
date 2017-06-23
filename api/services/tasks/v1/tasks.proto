@@ -70,6 +70,8 @@ message CreateTaskRequest {
 	bool terminal = 7;
 
 	containerd.types.Descriptor checkpoint = 8;
+
+	map<string, string> options = 9;
 }
 
 message CreateTaskResponse {

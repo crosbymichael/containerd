@@ -60,6 +60,7 @@ message CreateTaskRequest {
 	string stderr = 8;
 	string checkpoint = 9;
 	string parent_checkpoint = 10;
+	map<string, string> options = 11;
 }
 
 message CreateTaskResponse {
