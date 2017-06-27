@@ -33,12 +33,13 @@ type OOMCollector struct {
 }
 
 type oom struct {
-	id       string
-	c        cgroups.Cgroup
-	triggers []Trigger
+	id        string
+	namespace string
+	c         cgroups.Cgroup
+	triggers  []Trigger
 }
 
-func (o *OOMCollector) Add(id string, cg cgroups.Cgroup, triggers ...Trigger) error {
+func (o *OOMCollector) Add(id, namespace string, cg cgroups.Cgroup, triggers ...Trigger) error {
 	o.mu.Lock()
 	defer o.mu.Unlock()
 	fd, err := cg.OOMEventFD()
@@ -46,9 +47,10 @@ func (o *OOMCollector) Add(id string, cg cgroups.Cgroup, triggers ...Trigger) er
 		return err
 	}
 	o.set[fd] = &oom{
-		id:       id,
-		c:        cg,
-		triggers: triggers,
+		id:        id,
+		c:         cg,
+		triggers:  triggers,
+		namespace: namespace,
 	}
 	// set the gauge's default value
 	o.memoryOOM.WithValues(id).Set(0)
