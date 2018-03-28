@@ -115,11 +115,12 @@ type State struct {
 	ExitStatus uint32
 	// ExitedAt is the time at which the process exited
 	// Only valid if the Status is Stopped
-	ExitedAt time.Time
-	Stdin    string
-	Stdout   string
-	Stderr   string
-	Terminal bool
+	ExitedAt   time.Time
+	Stdin      string
+	Stdout     string
+	Stderr     string
+	Terminal   bool
+	BundlePath string
 }
 
 // ProcessInfo holds platform specific process information

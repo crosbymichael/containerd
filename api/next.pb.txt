@@ -3448,6 +3448,13 @@ file {
       }
       json_name: "exitedAt"
     }
+    field {
+      name: "bundlePath"
+      number: 11
+      label: LABEL_OPTIONAL
+      type: TYPE_STRING
+      json_name: "bundlePath"
+    }
   }
   message_type {
     name: "ProcessInfo"

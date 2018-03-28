@@ -48,9 +48,10 @@ type Task struct {
 	monitor   runtime.TaskMonitor
 	events    *exchange.Exchange
 	runtime   *runc.Runc
+	path      string
 }
 
-func newTask(id, namespace string, pid int, shim *client.Client, monitor runtime.TaskMonitor, events *exchange.Exchange, runtime *runc.Runc) (*Task, error) {
+func newTask(id, namespace, path string, pid int, shim *client.Client, monitor runtime.TaskMonitor, events *exchange.Exchange, runtime *runc.Runc) (*Task, error) {
 	var (
 		err error
 		cg  cgroups.Cgroup
@@ -70,6 +71,7 @@ func newTask(id, namespace string, pid int, shim *client.Client, monitor runtime
 		monitor:   monitor,
 		events:    events,
 		runtime:   runtime,
+		path:      path,
 	}, nil
 }
 
@@ -151,6 +153,7 @@ func (t *Task) State(ctx context.Context) (runtime.State, error) {
 		Terminal:   response.Terminal,
 		ExitStatus: response.ExitStatus,
 		ExitedAt:   response.ExitedAt,
+		BundlePath: t.path,
 	}, nil
 }
 

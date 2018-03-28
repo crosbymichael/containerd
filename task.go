@@ -63,6 +63,8 @@ type Status struct {
 	ExitStatus uint32
 	// ExitedTime is the time at which the process died
 	ExitTime time.Time
+	// BundlePath is the path to the bundle
+	BundlePath string
 }
 
 // ProcessInfo provides platform specific process information
@@ -236,6 +238,7 @@ func (t *task) Status(ctx context.Context) (Status, error) {
 		Status:     ProcessStatus(strings.ToLower(r.Process.Status.String())),
 		ExitStatus: r.Process.ExitStatus,
 		ExitTime:   r.Process.ExitedAt,
+		BundlePath: r.Process.BundlePath,
 	}, nil
 }
 

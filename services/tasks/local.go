@@ -263,6 +263,7 @@ func processFromContainerd(ctx context.Context, p runtime.Process) (*task.Proces
 		Terminal:   state.Terminal,
 		ExitStatus: state.ExitStatus,
 		ExitedAt:   state.ExitedAt,
+		BundlePath: state.BundlePath,
 	}, nil
 }
 
