@@ -27,6 +27,7 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/containerd/containerd/contrib/nvidia"
 	"github.com/containerd/containerd/log"
 	"github.com/containerd/containerd/mount"
 	"github.com/containerd/containerd/server"
@@ -89,6 +90,7 @@ func App() *cli.App {
 	app.Commands = []cli.Command{
 		configCommand,
 		publishCommand,
+		nvidia.Hook,
 	}
 	app.Action = func(context *cli.Context) error {
 		var (
