@@ -43,6 +43,7 @@ import (
 	"github.com/containerd/containerd/platforms"
 	"github.com/containerd/containerd/plugin"
 	"github.com/containerd/containerd/runtime"
+	"github.com/containerd/containerd/runtime/bundle"
 	runc "github.com/containerd/go-runc"
 	"github.com/containerd/typeurl"
 	ptypes "github.com/gogo/protobuf/types"
@@ -58,7 +59,6 @@ var (
 )
 
 const (
-	configFilename = "config.json"
 	defaultRuntime = "runc"
 	defaultShim    = "containerd-shim"
 )
@@ -173,7 +173,7 @@ func (r *Runtime) Create(ctx context.Context, id string, opts runtime.CreateOpts
 		return nil, err
 	}
 
-	bundle, err := newBundle(id,
+	bundle, err := bundle.New(id,
 		filepath.Join(r.state, namespace),
 		filepath.Join(r.root, namespace),
 		opts.Spec.Value)
@@ -227,7 +227,7 @@ func (r *Runtime) Create(ctx context.Context, id string, opts runtime.CreateOpts
 		shimopt = ShimRemote(r.config, r.address, cgroup, exitHandler)
 	}
 
-	s, err := bundle.NewShimClient(ctx, namespace, shimopt, ropts)
+	s, err := NewShimClient(ctx, namespace, bundle, shimopt, ropts)
 	if err != nil {
 		return nil, err
 	}
@@ -245,7 +245,7 @@ func (r *Runtime) Create(ctx context.Context, id string, opts runtime.CreateOpts
 	}
 	sopts := &shim.CreateTaskRequest{
 		ID:         id,
-		Bundle:     bundle.path,
+		Bundle:     bundle.Path,
 		Runtime:    rt,
 		Stdin:      opts.IO.Stdin,
 		Stdout:     opts.IO.Stdout,
@@ -313,7 +313,7 @@ func (r *Runtime) Delete(ctx context.Context, c runtime.Task) (*runtime.Exit, er
 	if err := r.monitor.Stop(lc); err != nil {
 		return nil, err
 	}
-	bundle := loadBundle(
+	bundle := bundle.Load(
 		lc.id,
 		filepath.Join(r.state, namespace, lc.id),
 		filepath.Join(r.root, namespace, lc.id),
@@ -389,17 +389,17 @@ func (r *Runtime) loadTasks(ctx context.Context, ns string) ([]*Task, error) {
 			continue
 		}
 		id := path.Name()
-		bundle := loadBundle(
+		bundle := bundle.Load(
 			id,
 			filepath.Join(r.state, ns, id),
 			filepath.Join(r.root, ns, id),
 		)
 		ctx = namespaces.WithNamespace(ctx, ns)
-		pid, _ := runc.ReadPidFile(filepath.Join(bundle.path, proc.InitPidFile))
-		s, err := bundle.NewShimClient(ctx, ns, ShimConnect(r.config, func() {
+		pid, _ := runc.ReadPidFile(filepath.Join(bundle.Path, proc.InitPidFile))
+		s, err := NewShimClient(ctx, ns, bundle, ShimConnect(r.config, func() {
 			err := r.cleanupAfterDeadShim(ctx, bundle, ns, id, pid)
 			if err != nil {
-				log.G(ctx).WithError(err).WithField("bundle", bundle.path).
+				log.G(ctx).WithError(err).WithField("bundle", bundle.Path).
 					Error("cleaning up after dead shim")
 			}
 		}), nil)
@@ -410,7 +410,7 @@ func (r *Runtime) loadTasks(ctx context.Context, ns string) ([]*Task, error) {
 			}).Error("connecting to shim")
 			err := r.cleanupAfterDeadShim(ctx, bundle, ns, id, pid)
 			if err != nil {
-				log.G(ctx).WithError(err).WithField("bundle", bundle.path).
+				log.G(ctx).WithError(err).WithField("bundle", bundle.Path).
 					Error("cleaning up after dead shim")
 			}
 			continue
@@ -423,7 +423,7 @@ func (r *Runtime) loadTasks(ctx context.Context, ns string) ([]*Task, error) {
 		}
 
 		t, err := newTask(id, ns, pid, s, r.monitor, r.events,
-			proc.NewRunc(ropts.RuntimeRoot, bundle.path, ns, ropts.Runtime, ropts.CriuPath, ropts.SystemdCgroup))
+			proc.NewRunc(ropts.RuntimeRoot, bundle.Path, ns, ropts.Runtime, ropts.CriuPath, ropts.SystemdCgroup))
 		if err != nil {
 			log.G(ctx).WithError(err).Error("loading task type")
 			continue
@@ -433,7 +433,7 @@ func (r *Runtime) loadTasks(ctx context.Context, ns string) ([]*Task, error) {
 	return o, nil
 }
 
-func (r *Runtime) cleanupAfterDeadShim(ctx context.Context, bundle *bundle, ns, id string, pid int) error {
+func (r *Runtime) cleanupAfterDeadShim(ctx context.Context, bundle *bundle.Bundle, ns, id string, pid int) error {
 	ctx = namespaces.WithNamespace(ctx, ns)
 	if err := r.terminate(ctx, bundle, ns, id); err != nil {
 		if r.config.ShimDebug {
@@ -467,7 +467,7 @@ func (r *Runtime) cleanupAfterDeadShim(ctx context.Context, bundle *bundle, ns, 
 	return nil
 }
 
-func (r *Runtime) terminate(ctx context.Context, bundle *bundle, ns, id string) error {
+func (r *Runtime) terminate(ctx context.Context, bundle *bundle.Bundle, ns, id string) error {
 	rt, err := r.getRuntime(ctx, ns, id)
 	if err != nil {
 		return err
@@ -477,9 +477,9 @@ func (r *Runtime) terminate(ctx context.Context, bundle *bundle, ns, id string) 
 	}); err != nil {
 		log.G(ctx).WithError(err).Warnf("delete runtime state %s", id)
 	}
-	if err := mount.Unmount(filepath.Join(bundle.path, "rootfs"), 0); err != nil {
+	if err := mount.Unmount(filepath.Join(bundle.Path, "rootfs"), 0); err != nil {
 		log.G(ctx).WithError(err).WithFields(logrus.Fields{
-			"path": bundle.path,
+			"path": bundle.Path,
 			"id":   id,
 		}).Warnf("unmount task rootfs")
 	}
