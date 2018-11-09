@@ -400,6 +400,7 @@ func (s *stoppedState) Start(ctx context.Context) error {
 }
 
 func (s *stoppedState) Delete(ctx context.Context) error {
+	s.p.kill(ctx, uint32(syscall.SIGKILL), false)
 	if err := s.p.delete(ctx); err != nil {
 		return err
 	}
