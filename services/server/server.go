@@ -80,7 +80,6 @@ func New(ctx context.Context, config *srvconfig.Config) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	serverOpts := []grpc.ServerOption{
 		grpc.UnaryInterceptor(grpc_prometheus.UnaryServerInterceptor),
 		grpc.StreamInterceptor(grpc_prometheus.StreamServerInterceptor),
@@ -91,11 +90,14 @@ func New(ctx context.Context, config *srvconfig.Config) (*Server, error) {
 	if config.GRPC.MaxSendMsgSize > 0 {
 		serverOpts = append(serverOpts, grpc.MaxSendMsgSize(config.GRPC.MaxSendMsgSize))
 	}
-	rpc := grpc.NewServer(serverOpts...)
 	var (
-		services []plugin.Service
-		s        = &Server{
+		rpc         = grpc.NewServer(serverOpts...)
+		hrpc        = grpc.NewServer(serverOpts...)
+		services    []plugin.Service
+		tcpServices []plugin.TCPService
+		s           = &Server{
 			rpc:    rpc,
+			hrpc:   hrpc,
 			events: exchange.NewExchange(),
 			config: config,
 		}
@@ -141,11 +143,20 @@ func New(ctx context.Context, config *srvconfig.Config) (*Server, error) {
 		if service, ok := instance.(plugin.Service); ok {
 			services = append(services, service)
 		}
+		if service, ok := instance.(plugin.TCPService); ok {
+			tcpServices = append(tcpServices, service)
+		}
+
 		s.plugins = append(s.plugins, result)
 	}
 	// register services after all plugins have been initialized
 	for _, service := range services {
 		if err := service.Register(rpc); err != nil {
+			return nil, err
+		}
+	}
+	for _, service := range tcpServices {
+		if err := service.RegisterTCP(hrpc); err != nil {
 			return nil, err
 		}
 	}
@@ -155,6 +166,7 @@ func New(ctx context.Context, config *srvconfig.Config) (*Server, error) {
 // Server is the containerd main daemon
 type Server struct {
 	rpc     *grpc.Server
+	hrpc    *grpc.Server
 	events  *exchange.Exchange
 	config  *srvconfig.Config
 	plugins []*plugin.Plugin
@@ -178,6 +190,12 @@ func (s *Server) ServeMetrics(l net.Listener) error {
 	m := http.NewServeMux()
 	m.Handle("/v1/metrics", metrics.Handler())
 	return trapClosedConnErr(http.Serve(l, m))
+}
+
+// ServeTCP allows services to serve over tcp
+func (s *Server) ServeTCP(l net.Listener) error {
+	grpc_prometheus.Register(s.hrpc)
+	return trapClosedConnErr(s.hrpc.Serve(l))
 }
 
 // ServeDebug provides a debug endpoint
