@@ -29,12 +29,18 @@ import (
 	"strings"
 
 	"github.com/containerd/containerd/errdefs"
-	"github.com/containerd/containerd/pkg/encryption/config"
 	"github.com/containerd/containerd/pkg/encryption/keywrap"
 	"github.com/pkg/errors"
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/packet"
 )
+
+type GPGConfig struct {
+	PublicKeyringFile    []byte
+	Recipients           []string
+	PrivateKeys          [][]byte
+	PrivateKeysPasswords [][]byte
+}
 
 type gpgKeyWrapper struct {
 }
@@ -61,7 +67,11 @@ func (kw *gpgKeyWrapper) GetAnnotationID() string {
 
 // WrapKeys wraps the session key for recpients and encrypts the optsData, which
 // describe the symmetric key used for encrypting the layer
-func (kw *gpgKeyWrapper) WrapKeys(ec *config.EncryptConfig, optsData []byte) ([]byte, error) {
+func (kw *gpgKeyWrapper) WrapKeys(ic interface{}, optsData []byte) ([]byte, error) {
+	ec, ok := ic.(*GPGConfig)
+	if !ok {
+		return nil, errors.New("unsupported encryption config")
+	}
 	ciphertext := new(bytes.Buffer)
 	el, err := kw.createEntityList(ec)
 	if err != nil {
@@ -91,11 +101,14 @@ func (kw *gpgKeyWrapper) WrapKeys(ec *config.EncryptConfig, optsData []byte) ([]
 
 // UnwrapKey unwraps the symmetric key with which the layer is encrypted
 // This symmetric key is encrypted in the PGP payload.
-func (kw *gpgKeyWrapper) UnwrapKey(dc *config.DecryptConfig, pgpPacket []byte) ([]byte, error) {
-	pgpPrivateKeys, pgpPrivateKeysPwd, err := kw.getKeyParameters(dc.Parameters)
-	if err != nil {
-		return nil, err
+func (kw *gpgKeyWrapper) UnwrapKey(ic interface{}, pgpPacket []byte) ([]byte, error) {
+	ec, ok := ic.(*GPGConfig)
+	if !ok {
+		return nil, errors.New("unsupported encryption config")
 	}
+
+	pgpPrivateKeys := ec.PrivateKeys
+	pgpPrivateKeysPwd := ec.PrivateKeysPasswords
 
 	for idx, pgpPrivateKey := range pgpPrivateKeys {
 		r := bytes.NewBuffer(pgpPrivateKey)
@@ -192,42 +205,27 @@ func (kw *gpgKeyWrapper) GetRecipients(b64pgpPackets string) ([]string, error) {
 	return array, nil
 }
 
-func (kw *gpgKeyWrapper) GetPrivateKeys(dcparameters map[string][][]byte) [][]byte {
-	return dcparameters["gpg-privatekeys"]
-}
-
-func (kw *gpgKeyWrapper) getKeyParameters(dcparameters map[string][][]byte) ([][]byte, [][]byte, error) {
-
-	privKeys := kw.GetPrivateKeys(dcparameters)
-	if len(privKeys) == 0 {
-		return nil, nil, errors.New("GPG: Missing private key parameter")
+func (kw *gpgKeyWrapper) GetPrivateKeys(dc interface{}) [][]byte {
+	ec, ok := dc.(*GPGConfig)
+	if !ok {
+		return nil
 	}
-
-	return privKeys, dcparameters["gpg-privatekeys-passwords"], nil
+	return ec.PrivateKeys
 }
 
 // createEntityList creates the opengpg EntityList by reading the KeyRing
 // first and then filtering out recipients' keys
-func (kw *gpgKeyWrapper) createEntityList(ec *config.EncryptConfig) (openpgp.EntityList, error) {
-	pgpPubringFile := ec.Parameters["gpg-pubkeyringfile"]
-	if len(pgpPubringFile) == 0 {
-		return nil, nil
-	}
-	r := bytes.NewReader(pgpPubringFile[0])
+func (kw *gpgKeyWrapper) createEntityList(ec *GPGConfig) (openpgp.EntityList, error) {
+	r := bytes.NewReader(ec.PublicKeyringFile)
 
 	entityList, err := openpgp.ReadKeyRing(r)
 	if err != nil {
 		return nil, err
 	}
 
-	gpgRecipients := ec.Parameters["gpg-recipients"]
-	if len(gpgRecipients) == 0 {
-		return nil, nil
-	}
-
 	rSet := make(map[string]int)
-	for _, r := range gpgRecipients {
-		rSet[string(r)] = 0
+	for _, r := range ec.Recipients {
+		rSet[r] = 0
 	}
 
 	var filteredList openpgp.EntityList
@@ -237,7 +235,7 @@ func (kw *gpgKeyWrapper) createEntityList(ec *config.EncryptConfig) (openpgp.Ent
 			if err != nil {
 				return nil, err
 			}
-			for _, r := range gpgRecipients {
+			for _, r := range ec.Recipients {
 				recp := string(r)
 				if strings.Compare(addr.Name, recp) == 0 || strings.Compare(addr.Address, recp) == 0 {
 					filteredList = append(filteredList, entity)

@@ -16,25 +16,8 @@
 
 package config
 
-// EncryptConfig is the container image PGP encryption configuration holding
-// the identifiers of those that will be able to decrypt the container and
-// the PGP public keyring file data that contains their public keys.
-type EncryptConfig struct {
-	// map holding 'gpg-recipients', 'gpg-pubkeyringfile', 'pubkeys', 'x509s'
-	Parameters map[string][][]byte
-
-	DecryptConfig DecryptConfig
-}
-
-// DecryptConfig wraps the Parameters map that holds the decryption key
-type DecryptConfig struct {
-	// map holding 'privkeys', 'x509s', 'gpg-privatekeys'
-	Parameters map[string][][]byte
-}
-
-// CryptoConfig is a common wrapper for EncryptConfig and DecrypConfig that can
+// Info is a common wrapper for EncryptConfig and DecrypConfig that can
 // be passed through functions that share much code for encryption and decryption
-type CryptoConfig struct {
-	EncryptConfig *EncryptConfig
-	DecryptConfig *DecryptConfig
+type Info interface {
+	DecryptInfo() interface{}
 }

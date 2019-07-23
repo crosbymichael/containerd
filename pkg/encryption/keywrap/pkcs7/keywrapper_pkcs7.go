@@ -20,12 +20,17 @@ import (
 	"crypto"
 	"crypto/x509"
 
-	"github.com/containerd/containerd/pkg/encryption/config"
 	"github.com/containerd/containerd/pkg/encryption/keywrap"
 	"github.com/containerd/containerd/pkg/encryption/utils"
 	"github.com/fullsailor/pkcs7"
 	"github.com/pkg/errors"
 )
+
+type PKCSConfig struct {
+	Certificates         [][]byte
+	PrivateKeys          [][]byte
+	PrivateKeysPasswords [][]byte
+}
 
 type pkcs7KeyWrapper struct {
 }
@@ -41,8 +46,12 @@ func (kw *pkcs7KeyWrapper) GetAnnotationID() string {
 
 // WrapKeys wraps the session key for recpients and encrypts the optsData, which
 // describe the symmetric key used for encrypting the layer
-func (kw *pkcs7KeyWrapper) WrapKeys(ec *config.EncryptConfig, optsData []byte) ([]byte, error) {
-	x509Certs, err := collectX509s(ec.Parameters["x509s"])
+func (kw *pkcs7KeyWrapper) WrapKeys(ec interface{}, optsData []byte) ([]byte, error) {
+	pkcsConfig, ok := ec.(*PKCSConfig)
+	if !ok {
+		return nil, errors.New("unsupported encryption config")
+	}
+	x509Certs, err := collectX509s(pkcsConfig.Certificates)
 	if err != nil {
 		return nil, err
 	}
@@ -70,27 +79,32 @@ func collectX509s(x509s [][]byte) ([]*x509.Certificate, error) {
 	return x509Certs, nil
 }
 
-func (kw *pkcs7KeyWrapper) GetPrivateKeys(dcparameters map[string][][]byte) [][]byte {
-	return dcparameters["privkeys"]
-}
-
-func (kw *pkcs7KeyWrapper) getPrivateKeysPasswords(dcparameters map[string][][]byte) [][]byte {
-	return dcparameters["privkeys-passwords"]
+func (kw *pkcs7KeyWrapper) GetPrivateKeys(dc interface{}) [][]byte {
+	pkcsConfig, ok := dc.(*PKCSConfig)
+	if !ok {
+		return nil
+	}
+	return pkcsConfig.PrivateKeys
 }
 
 // UnwrapKey unwraps the symmetric key with which the layer is encrypted
 // This symmetric key is encrypted in the PKCS7 payload.
-func (kw *pkcs7KeyWrapper) UnwrapKey(dc *config.DecryptConfig, pkcs7Packet []byte) ([]byte, error) {
-	privKeys := kw.GetPrivateKeys(dc.Parameters)
+func (kw *pkcs7KeyWrapper) UnwrapKey(dc interface{}, pkcs7Packet []byte) ([]byte, error) {
+	pkcsConfig, ok := dc.(*PKCSConfig)
+	if !ok {
+		return nil, errors.New("unsupported encryption config")
+	}
+
+	privKeys := pkcsConfig.PrivateKeys
 	if len(privKeys) == 0 {
 		return nil, errors.New("no private keys found for PKCS7 decryption")
 	}
-	privKeysPasswords := kw.getPrivateKeysPasswords(dc.Parameters)
+	privKeysPasswords := pkcsConfig.PrivateKeysPasswords
 	if len(privKeysPasswords) != len(privKeys) {
 		return nil, errors.New("private key password array length must be same as that of private keys")
 	}
 
-	x509Certs, err := collectX509s(dc.Parameters["x509s"])
+	x509Certs, err := collectX509s(pkcsConfig.Certificates)
 	if err != nil {
 		return nil, err
 	}

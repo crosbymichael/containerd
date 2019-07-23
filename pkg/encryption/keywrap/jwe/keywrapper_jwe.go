@@ -19,12 +19,17 @@ package jwe
 import (
 	"crypto/ecdsa"
 
-	"github.com/containerd/containerd/pkg/encryption/config"
 	"github.com/containerd/containerd/pkg/encryption/keywrap"
 	"github.com/containerd/containerd/pkg/encryption/utils"
 	"github.com/pkg/errors"
 	jose "gopkg.in/square/go-jose.v2"
 )
+
+type JWEConfig struct {
+	PublicKeys           [][]byte
+	PrivateKeys          [][]byte
+	PrivateKeysPasswords [][]byte
+}
 
 type jweKeyWrapper struct {
 }
@@ -40,10 +45,15 @@ func NewKeyWrapper() keywrap.KeyWrapper {
 
 // WrapKeys wraps the session key for recpients and encrypts the optsData, which
 // describe the symmetric key used for encrypting the layer
-func (kw *jweKeyWrapper) WrapKeys(ec *config.EncryptConfig, optsData []byte) ([]byte, error) {
+func (kw *jweKeyWrapper) WrapKeys(ic interface{}, optsData []byte) ([]byte, error) {
+	ec, ok := ic.(*JWEConfig)
+	if !ok {
+		return nil, errors.New("unsupported encryption config")
+	}
+
 	var joseRecipients []jose.Recipient
 
-	err := addPubKeys(&joseRecipients, ec.Parameters["pubkeys"])
+	err := addPubKeys(&joseRecipients, ec.PublicKeys)
 	if err != nil {
 		return nil, err
 	}
@@ -63,17 +73,22 @@ func (kw *jweKeyWrapper) WrapKeys(ec *config.EncryptConfig, optsData []byte) ([]
 	return []byte(jwe.FullSerialize()), nil
 }
 
-func (kw *jweKeyWrapper) UnwrapKey(dc *config.DecryptConfig, jweString []byte) ([]byte, error) {
+func (kw *jweKeyWrapper) UnwrapKey(ic interface{}, jweString []byte) ([]byte, error) {
+	dc, ok := ic.(*JWEConfig)
+	if !ok {
+		return nil, errors.New("unsupported encryption config")
+	}
+
 	jwe, err := jose.ParseEncrypted(string(jweString))
 	if err != nil {
 		return nil, errors.New("jose.ParseEncrypted failed")
 	}
 
-	privKeys := kw.GetPrivateKeys(dc.Parameters)
+	privKeys := dc.PrivateKeys
 	if len(privKeys) == 0 {
 		return nil, errors.New("No private keys found for JWE decryption")
 	}
-	privKeysPasswords := kw.getPrivateKeysPasswords(dc.Parameters)
+	privKeysPasswords := dc.PrivateKeysPasswords
 	if len(privKeysPasswords) != len(privKeys) {
 		return nil, errors.New("Private key password array length must be same as that of private keys")
 	}
@@ -91,12 +106,12 @@ func (kw *jweKeyWrapper) UnwrapKey(dc *config.DecryptConfig, jweString []byte) (
 	return nil, errors.New("JWE: No suitable private key found for decryption")
 }
 
-func (kw *jweKeyWrapper) GetPrivateKeys(dcparameters map[string][][]byte) [][]byte {
-	return dcparameters["privkeys"]
-}
-
-func (kw *jweKeyWrapper) getPrivateKeysPasswords(dcparameters map[string][][]byte) [][]byte {
-	return dcparameters["privkeys-passwords"]
+func (kw *jweKeyWrapper) GetPrivateKeys(ic interface{}) [][]byte {
+	dc, ok := ic.(*JWEConfig)
+	if !ok {
+		return nil
+	}
+	return dc.PrivateKeys
 }
 
 func (kw *jweKeyWrapper) GetKeyIdsFromPacket(b64jwes string) ([]uint64, error) {

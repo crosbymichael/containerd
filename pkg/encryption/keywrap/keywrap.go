@@ -16,19 +16,15 @@
 
 package keywrap
 
-import (
-	"github.com/containerd/containerd/pkg/encryption/config"
-)
-
 // KeyWrapper is the interface used for wrapping keys using
 // a specific encryption technology (pgp, jwe)
 type KeyWrapper interface {
-	WrapKeys(ec *config.EncryptConfig, optsData []byte) ([]byte, error)
-	UnwrapKey(dc *config.DecryptConfig, annotation []byte) ([]byte, error)
+	WrapKeys(ec interface{}, optsData []byte) ([]byte, error)
+	UnwrapKey(dc interface{}, annotation []byte) ([]byte, error)
 	GetAnnotationID() string
 	// GetPrivateKeys (optional) gets the array of private keys. It is an optional implementation
 	// as in some key services, a private key may not be exportable (i.e. HSM)
-	GetPrivateKeys(dcparameters map[string][][]byte) [][]byte
+	GetPrivateKeys(interface{}) [][]byte
 
 	// GetKeyIdsFromPacket (optional) gets a list of key IDs. This is optional as some encryption
 	// schemes may not have a notion of key IDs

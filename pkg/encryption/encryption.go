@@ -70,7 +70,7 @@ func GetWrappedKeysMap(desc ocispec.Descriptor) map[string]string {
 }
 
 // EncryptLayer encrypts the layer by running one encryptor after the other
-func EncryptLayer(ec *config.EncryptConfig, encOrPlainLayerReader io.Reader, desc ocispec.Descriptor) (io.Reader, map[string]string, error) {
+func EncryptLayer(ec config.Info, encOrPlainLayerReader io.Reader, desc ocispec.Descriptor) (io.Reader, map[string]string, error) {
 	var (
 		encLayerReader io.Reader
 		err            error
@@ -84,7 +84,7 @@ func EncryptLayer(ec *config.EncryptConfig, encOrPlainLayerReader io.Reader, des
 	for annotationsID := range keyWrapperAnnotations {
 		annotation := desc.Annotations[annotationsID]
 		if annotation != "" {
-			optsData, err = decryptLayerKeyOptsData(&ec.DecryptConfig, desc)
+			optsData, err = decryptLayerKeyOptsData(ec.DecryptInfo(), desc)
 			if err != nil {
 				return nil, nil, err
 			}
@@ -120,7 +120,7 @@ func EncryptLayer(ec *config.EncryptConfig, encOrPlainLayerReader io.Reader, des
 
 // preWrapKeys calls WrapKeys and handles the base64 encoding and concatenation of the
 // annotation data
-func preWrapKeys(keywrapper keywrap.KeyWrapper, ec *config.EncryptConfig, b64Annotations string, optsData []byte) (string, error) {
+func preWrapKeys(keywrapper keywrap.KeyWrapper, ec interface{}, b64Annotations string, optsData []byte) (string, error) {
 	newAnnotation, err := keywrapper.WrapKeys(ec, optsData)
 	if err != nil || len(newAnnotation) == 0 {
 		return b64Annotations, err
@@ -135,7 +135,7 @@ func preWrapKeys(keywrapper keywrap.KeyWrapper, ec *config.EncryptConfig, b64Ann
 // DecryptLayer decrypts a layer trying one keywrap.KeyWrapper after the other to see whether it
 // can apply the provided private key
 // If unwrapOnly is set we will only try to decrypt the layer encryption key and return
-func DecryptLayer(dc *config.DecryptConfig, encLayerReader io.Reader, desc ocispec.Descriptor, unwrapOnly bool) (io.Reader, digest.Digest, error) {
+func DecryptLayer(dc interface{}, encLayerReader io.Reader, desc ocispec.Descriptor, unwrapOnly bool) (io.Reader, digest.Digest, error) {
 	if dc == nil {
 		return nil, "", errors.Wrapf(errdefs.ErrInvalidArgument, "DecryptConfig must not be nil")
 	}
@@ -147,14 +147,14 @@ func DecryptLayer(dc *config.DecryptConfig, encLayerReader io.Reader, desc ocisp
 	return commonDecryptLayer(encLayerReader, optsData)
 }
 
-func decryptLayerKeyOptsData(dc *config.DecryptConfig, desc ocispec.Descriptor) ([]byte, error) {
+func decryptLayerKeyOptsData(dc interface{}, desc ocispec.Descriptor) ([]byte, error) {
 	privKeyGiven := false
 	for annotationsID, scheme := range keyWrapperAnnotations {
 		b64Annotation := desc.Annotations[annotationsID]
 		if b64Annotation != "" {
 			keywrapper := GetKeyWrapper(scheme)
 
-			if len(keywrapper.GetPrivateKeys(dc.Parameters)) == 0 {
+			if len(keywrapper.GetPrivateKeys(dc)) == 0 {
 				continue
 			}
 			privKeyGiven = true
@@ -180,7 +180,7 @@ func decryptLayerKeyOptsData(dc *config.DecryptConfig, desc ocispec.Descriptor) 
 // preUnwrapKey decodes the comma separated base64 strings and calls the Unwrap function
 // of the given keywrapper with it and returns the result in case the Unwrap functions
 // does not return an error. If all attempts fail, an error is returned.
-func preUnwrapKey(keywrapper keywrap.KeyWrapper, dc *config.DecryptConfig, b64Annotations string) ([]byte, error) {
+func preUnwrapKey(keywrapper keywrap.KeyWrapper, dc interface{}, b64Annotations string) ([]byte, error) {
 	if b64Annotations == "" {
 		return nil, nil
 	}

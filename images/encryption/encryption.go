@@ -265,7 +265,7 @@ func cryptChildren(ctx context.Context, cs content.Store, desc ocispec.Descripto
 			// never encrypt/decrypt
 			newLayers = append(newLayers, child)
 		default:
-			return ocispec.Descriptor{}, false, errors.Errorf("bad/unhandled MediaType %s in encryptChildren\n", child.MediaType)
+			return ocispec.Descriptor{}, false, errors.Errorf("bad/unhandled MediaType %s in encryptChildren", child.MediaType)
 		}
 	}
 
