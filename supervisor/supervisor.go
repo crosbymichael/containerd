@@ -41,6 +41,7 @@ func New(stateDir string, runtimeName, shimName string, runtimeArgs []string, ti
 		runtimeArgs:       runtimeArgs,
 		shim:              shimName,
 		timeout:           timeout,
+		execTasks:         make(chan *execTask, defaultBufferSize),
 		containerExecSync: make(map[string]map[string]chan struct{}),
 	}
 	if err := setupEventLog(s, retainCount); err != nil {
@@ -48,6 +49,9 @@ func New(stateDir string, runtimeName, shimName string, runtimeArgs []string, ti
 	}
 	go s.exitHandler()
 	go s.oomHandler()
+	for i := 0; i < 4; i++ {
+		go s.execWorker(i)
+	}
 	if err := s.restore(); err != nil {
 		return nil, err
 	}
@@ -174,6 +178,7 @@ type Supervisor struct {
 	// before the init process death
 	containerExecSyncLock sync.Mutex
 	containerExecSync     map[string]map[string]chan struct{}
+	execTasks             chan *execTask
 }
 
 // Stop closes all startTasks and sends a SIGTERM to each container's pid1 then waits for they to

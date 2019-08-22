@@ -21,36 +21,56 @@ type AddProcessTask struct {
 	StartResponse chan StartResponse
 }
 
+type execTask struct {
+	t  *AddProcessTask
+	ci *containerInfo
+}
+
 func (s *Supervisor) addProcess(t *AddProcessTask) error {
-	start := time.Now()
 	ci, ok := s.containers[t.ID]
 	if !ok {
 		return ErrContainerNotFound
 	}
-	go func() {
+	s.execTasks <- &execTask{
+		t:  t,
+		ci: ci,
+	}
+	return errDeferredResponse
+}
+
+func (s *Supervisor) execWorker(id int) {
+	for p := range s.execTasks {
+		var (
+			start = time.Now()
+			ci    = p.ci
+			t     = p.t
+		)
+
 		process, err := ci.container.Exec(t.Ctx(), t.PID, *t.ProcessSpec, runtime.NewStdio(t.Stdin, t.Stdout, t.Stderr))
 		if err != nil {
-			t.errCh <- err
-			return
+			t.ErrorCh() <- err
+			continue
 		}
 		s.newExecSyncChannel(t.ID, t.PID)
+
 		if err := s.monitorProcess(process); err != nil {
 			s.deleteExecSyncChannel(t.ID, t.PID)
 			// Kill process
 			process.Signal(os.Kill)
 			ci.container.RemoveProcess(t.PID)
-			t.errCh <- err
-			return
+			t.ErrorCh() <- err
+			continue
 		}
 		ExecProcessTimer.UpdateSince(start)
-		t.errCh <- nil
+
+		t.ErrorCh() <- nil
 		t.StartResponse <- StartResponse{ExecPid: process.SystemPid()}
+
 		s.notifySubscribers(Event{
 			Timestamp: time.Now(),
 			Type:      StateStartProcess,
 			PID:       t.PID,
 			ID:        t.ID,
 		})
-	}()
-	return errDeferredResponse
+	}
 }
