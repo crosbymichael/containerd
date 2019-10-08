@@ -466,13 +466,30 @@ func (pc *proxyClients) getClient(address string) (*grpc.ClientConn, error) {
 		grpc.WithDefaultCallOptions(grpc.MaxCallSendMsgSize(defaults.DefaultMaxSendMsgSize)),
 	}
 
-	conn, err := grpc.Dial(dialer.DialAddress(address), gopts...)
+	_, _, err := net.SplitHostPort(address)
+	if err != nil {
+		conn, err := grpc.Dial(dialer.DialAddress(address), gopts...)
+		if err != nil {
+			return nil, errors.Wrapf(err, "failed to dial %q", address)
+		}
+		pc.clients[address] = conn
+		return conn, nil
+	}
+	log.L.Println("connect", address)
+	gopts = []grpc.DialOption{
+		grpc.WithInsecure(),
+		grpc.WithBackoffMaxDelay(3 * time.Second),
+
+		// TODO(stevvooe): We may need to allow configuration of this on the client.
+		grpc.WithDefaultCallOptions(grpc.MaxCallRecvMsgSize(defaults.DefaultMaxRecvMsgSize)),
+		grpc.WithDefaultCallOptions(grpc.MaxCallSendMsgSize(defaults.DefaultMaxSendMsgSize)),
+	}
+
+	conn, err := grpc.Dial(address, gopts...)
 	if err != nil {
 		return nil, errors.Wrapf(err, "failed to dial %q", address)
 	}
-
 	pc.clients[address] = conn
-
 	return conn, nil
 }
 

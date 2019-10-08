@@ -181,6 +181,7 @@ func (o *snapshotter) Usage(ctx context.Context, key string) (snapshots.Usage, e
 }
 
 func (o *snapshotter) Prepare(ctx context.Context, key, parent string, opts ...snapshots.Opt) ([]mount.Mount, error) {
+	fmt.Println("ov prepare")
 	return o.createSnapshot(ctx, snapshots.KindActive, key, parent, opts)
 }
 
