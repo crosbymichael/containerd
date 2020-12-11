@@ -17,47 +17,29 @@
 package main
 
 import (
-	"os"
-	"strings"
+	"context"
 
 	"github.com/BurntSushi/toml"
-	"github.com/pkg/errors"
+	"github.com/containerd/containerd/namespaces"
 	"github.com/urfave/cli"
 )
 
-var setCommand = cli.Command{
-	Name:  "set",
-	Usage: "set container configuration options",
+var initCommand = cli.Command{
+	Name:  "init",
+	Usage: "create the runtime resources for a container",
 	Action: func(clix *cli.Context) error {
 		var (
-			key   = clix.Args().First()
-			args  = clix.Args().Tail()
-			parts = strings.Split(key, ".")
-			err   error
+			ctx    = namespaces.WithNamespace(context.Background(), "ctd")
+			config Config
 		)
-
-		var config Config
 		if _, err := toml.DecodeFile(".ctd", &config); err != nil {
 			return err
 		}
-		switch parts[0] {
-		case "cpu", "memory", "io", "pids":
-			if config.Resources == nil {
-				config.Resources = make(map[string]string)
+		for _, l := range config.Layers() {
+			if err := l.Init(ctx, &config); err != nil {
+				return err
 			}
-			a := args[0]
-			if len(args) > 0 {
-				a = strings.Join(args, " ")
-			}
-			config.Resources[key] = a
-		default:
-			return errors.Errorf("unknown key %s", key)
 		}
-		f, err := os.Create(".ctd")
-		if err != nil {
-			return err
-		}
-		defer f.Close()
-		return config.Write(f)
+		return nil
 	},
 }

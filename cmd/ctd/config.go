@@ -59,7 +59,6 @@ type Memory struct {
 
 type Process struct {
 	NoFile   int      `toml:"no_file"`
-	Pids     int      `toml:"pids"`
 	Args     []string `toml:"args"`
 	Env      []string `toml:"env"`
 	UID      *uint32  `toml:"uid"`
@@ -77,15 +76,20 @@ type Config struct {
 	id   string
 	path string
 
-	Image   string            `toml:"image"`
-	Root    *Root             `toml:"root"`
-	Volumes map[string]Volume `toml:"volumes"`
-	Mounts  []Mount           `toml:"mount"`
-	CPU     *CPU              `toml:"cpu"`
-	Memory  *Memory           `toml:"memory"`
-	Process *Process          `toml:"process"`
-	IO      *IO               `toml:"io"`
-	Network *Network          `toml:"network"`
+	Image     string            `toml:"image"`
+	Root      *Root             `toml:"root"`
+	Volumes   map[string]Volume `toml:"volumes"`
+	Mounts    []Mount           `toml:"mount"`
+	Process   *Process          `toml:"process"`
+	Resources map[string]string `toml:"resources"`
+	Network   *Network          `toml:"network"`
+}
+
+func (c *Config) Layers() (o []Layer) {
+	if len(c.Resources) > 0 {
+		o = append(o, &CgroupLayer{})
+	}
+	return o
 }
 
 func (c *Config) rootfs() string {
